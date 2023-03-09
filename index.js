@@ -1,0 +1,2 @@
+require('./global');
+core.welcome();
