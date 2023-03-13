@@ -1,5 +1,4 @@
 const { exec } = require('child_process');
-const { Console } = require('console');
 const os = require('os');
 
 const $ = {
@@ -104,14 +103,77 @@ const $ = {
     }
 }
 
+const platform = {
+    check_hardware: function(){
+        let platform = os.platform();
+        if (platform === 'win32') {
+            return "windows"
+        } else if (platform === 'darwin') {
+            return "macos"
+        } else if (platform === 'linux') {
+            return "linux"
+        } else {
+            return "unknown";
+        }
+    },
+    windows: async function(){
+        return new Promise(async(resolve) => {
+            // 獲取CPU資訊
+            hardware.cpu = os.cpus()[0].model;
+            // 獲取RAM資訊
+            const totalMemory = os.totalmem();
+            hardware.ram.total = (totalMemory / 1024 / 1024 / 1024).toFixed(2);
+            hardware.ram.fixed = Math.round(hardware.ram.total)
+            // 獲取GPU資訊
+            // await platform.win_wimc();
+            await platform.getNvidiaDrivers();
+            console.log(commit)
+            console.log(`CPU: ${hardware.cpu}`);
+            console.log(`RAM: ${hardware.ram.total} GB / ${hardware.ram.fixed} GB`);
+            console.log(`GPU: ${hardware.gpu.name} | ${hardware.gpu.ram.fixed} GB`);
+            console.log(commit)
+            resolve();
+        })
+    },
+    // win_wimc: function(){
+    //     return new Promise(async(resolve) => {
+    //         exec('wmic path win32_VideoController get name', (err, stdout, stderr) => {
+    //             try {
+    //                 let output = stdout.replace(/^Name\s*/, '').replace(/\s*$/, '');
+    //                 hardware.gpu.name = output;
+    //                 resolve();
+    //             } catch (error) {
+    //                 console.error(`[ERROR - GPU] ${error}`);
+    //                 resolve();
+    //             }
+    //         });
+    //     })
+    // },
+    getNvidiaDrivers: function(){
+        return new Promise((resolve)=>{
+          exec('nvidia-smi --query-gpu=gpu_name,memory.total,driver_version --format=csv,noheader,nounits',function (error, stdout, stderr) {
+              if(error){
+                console.error("[GPU-INFO ERROR] " + error);
+                console.log(`GPU: I guess is AMD or Intel GPU...`);
+                resolve(false);
+                return; 
+              }
+  
+              let nvddv = stdout.split(',');
+              hardware.gpu.name = nvddv[0];
+              hardware.gpu.ram.total = nvddv[1];
+              hardware.gpu.ram.fixed = nvddv[1]/1024;
+              resolve(true);
+          });
+        });
+      }
+}
+
 const install = {
     prepare: function(){
         // 設定命令參數
         console.log(`${i.__('Set Stable Diffusion Command Args...')}`)
         install.auto_set_command();
-        // 
-        // console.log(`${i.__('Start Download Stable Diffusion...')}`)
-        // install.download();
     },
     auto_set_command:  async function(){
         let arr = [];
@@ -163,77 +225,15 @@ const install = {
 
             installer.cmd = arr.join(" ");
             // console.log(installer.cmd)
+            install.download();
         }else{
             console.log("[✔] VRAM: Good! is more 8G | " + hardware.gpu.ram.fixed + "GB");
         }
+    },
+    download: function(){
+        // https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip
+        console.log("downloading...")
     }
-}
-
-
-const platform = {
-    check_hardware: function(){
-        let platform = os.platform();
-        if (platform === 'win32') {
-            return "windows"
-        } else if (platform === 'darwin') {
-            return "macos"
-        } else if (platform === 'linux') {
-            return "linux"
-        } else {
-            return "unknown";
-        }
-    },
-    windows: async function(){
-        return new Promise(async(resolve) => {
-            // 獲取CPU資訊
-            hardware.cpu = os.cpus()[0].model;
-            // 獲取RAM資訊
-            const totalMemory = os.totalmem();
-            hardware.ram.total = (totalMemory / 1024 / 1024 / 1024).toFixed(2);
-            hardware.ram.fixed = Math.round(hardware.ram.total)
-            // 獲取GPU資訊
-            // await platform.win_wimc();
-            await platform.getNvidiaDrivers();
-            console.log(commit)
-            console.log(`CPU: ${hardware.cpu}`);
-            console.log(`RAM: ${hardware.ram.total} GB / ${hardware.ram.fixed} GB`);
-            console.log(`GPU: ${hardware.gpu.name} | ${hardware.gpu.ram.fixed} GB`);
-            console.log(commit)
-            resolve();
-        })
-    },
-    win_wimc: function(){
-        return new Promise(async(resolve) => {
-            exec('wmic path win32_VideoController get name', (err, stdout, stderr) => {
-                try {
-                    let output = stdout.replace(/^Name\s*/, '').replace(/\s*$/, '');
-                    hardware.gpu.name = output;
-                    resolve();
-                } catch (error) {
-                    console.error(`[ERROR - GPU] ${error}`);
-                    resolve();
-                }
-            });
-        })
-    },
-    getNvidiaDrivers: function(){
-        return new Promise((resolve)=>{
-          exec('nvidia-smi --query-gpu=gpu_name,memory.total,driver_version --format=csv,noheader,nounits',function (error, stdout, stderr) {
-              if(error){
-                console.error("[GPU-INFO ERROR] " + error);
-                console.log(`GPU: I guess is AMD or Intel GPU...`);
-                resolve(false);
-                return; 
-              }
-  
-              let nvddv = stdout.split(',');
-              hardware.gpu.name = nvddv[0];
-              hardware.gpu.ram.total = nvddv[1];
-              hardware.gpu.ram.fixed = nvddv[1]/1024;
-              resolve(true);
-          });
-        });
-      }
 }
 
 module.exports = $;
