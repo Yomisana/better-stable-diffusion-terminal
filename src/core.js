@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const os = require('os');
+const path = require('path');
 
 const $ = {
     close: function(){
@@ -217,7 +218,7 @@ const install = {
                     arr.push("--medvram");
                     break;
                 case `${i.__('None Skip this time')}`:
-                    console.log("Skip add vram args");
+                    console.log(`${i.__('None Skip this time')}`);
                     break;
                 default:
                     break;
@@ -230,9 +231,10 @@ const install = {
             console.log("[✔] VRAM: Good! is more 8G | " + hardware.gpu.ram.fixed + "GB");
         }
     },
-    download: function(){
+    download: async function(){
         // https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip
-        console.log("downloading...")
+        console.log(`${i.__('Start Download Stable Diffusion...')}`);
+        await downloadData("https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip", path.join(__dirname, "stable-diffusion.zip"));
     }
 }
 

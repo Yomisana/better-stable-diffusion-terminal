@@ -14,5 +14,7 @@
     "Add medvram": "新增 medvram(<6G)",
     "None Skip this time": "這次不要新增此參數",
     "Skip add vram args": "略過新增 VRAM 參數",
+    "downloading...": "下載中...",
+    "complete!": "下載完畢!",
     "default": "default"
 }

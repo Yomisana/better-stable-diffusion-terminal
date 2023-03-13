@@ -14,5 +14,7 @@
     "Add medvram": "Add medvram(<6G)",
     "None Skip this time": "None Skip this time",
     "Skip add vram args": "Skip add vram args",
+    "downloading...": "Downloading...",
+    "complete!": "Complete!",
     "default": "default"
 }
