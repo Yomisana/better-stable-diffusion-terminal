@@ -3,5 +3,13 @@
     "Auto Install Stable Diffusion": "自動安裝 Stable Diffusion",
     "Check System what settings recommended of My PC": "檢查電腦推薦的設置",
     "Exit": "退出",
+    "Checking your PC hardware now...Please wait...": "檢查你的電腦硬體中...請稍後...",
+    "unsupport this system please change other system open this app": "你的作業系統並不支援 stable diffusion installer 請更換成其他作業系統在執行",
+    "Set Stable Diffusion Command Args...": "設定 Stable Diffusion 命令參數...",
+    "Start Download Stable Diffusion...": "開始下載 Stable Diffusion...",
+    "RAM below recommended value": "RAM 低於建議數值(8G)",
+    "VRAM below recommended value": "VRAM 低於建議數值(4G)",
+    "Choose whether you add parameters": "選擇你是否添加參數",
+    "Skip add vram args": "略過新增 VRAM 參數",
     "default": "default"
 }

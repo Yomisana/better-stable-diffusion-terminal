@@ -3,5 +3,16 @@
     "Auto Install Stable Diffusion": "Auto Install Stable Diffusion",
     "Check System what settings recommended of My PC": "Check System what settings recommended of My PC",
     "Exit": "Exit",
+    "Checking your PC hardware now...Please wait...": "Checking your PC hardware now...Please wait...",
+    "unsupport this system please change other system open this app": "unsupport this system please change other system open this app",
+    "Set Stable Diffusion Command Args...": "Set Stable Diffusion Command Args...",
+    "Start Download Stable Diffusion...": "Start Download Stable Diffusion...",
+    "RAM below recommended value": "RAM below recommended value(8G)",
+    "VRAM below recommended value": "VRAM below recommended value(8G)",
+    "Choose whether you add parameters": "Choose whether you add parameters",
+    "Add lowvram": "Add lowvram(<4G)",
+    "Add medvram": "Add medvram(<6G)",
+    "None Skip this time": "None Skip this time",
+    "Skip add vram args": "Skip add vram args",
     "default": "default"
 }

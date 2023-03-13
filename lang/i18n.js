@@ -6,8 +6,8 @@ const i18n = new I18n({
   autoReload: true,
   extension: '.json',
   staticCatalog: {
-    zh: require('./lang/zh.json'),
-    en: require('./lang/en.json'),
+    zh: require('./zh.json'),
+    en: require('./en.json'),
   },
 });
 

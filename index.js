@@ -1,2 +1,2 @@
-require('./global');
+require('./src/global');
 core.welcome();
