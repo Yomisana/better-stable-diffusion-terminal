@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const { Console } = require('console');
 const os = require('os');
 
 const $ = {
@@ -109,11 +110,11 @@ const install = {
         console.log(`${i.__('Set Stable Diffusion Command Args...')}`)
         install.auto_set_command();
         // 
-        console.log(`${i.__('Start Download Stable Diffusion...')}`)
-        
+        // console.log(`${i.__('Start Download Stable Diffusion...')}`)
+        // install.download();
     },
-    auto_set_command: function(){
-        let arr = new Array();
+    auto_set_command:  async function(){
+        let arr = [];
         // RAM 記憶體 低於 8G
         if(hardware.ram.fixed < 8){
             console.log("[X] RAM: Not good! is less 8G | " + hardware.ram.fixed + "GB");
@@ -133,7 +134,7 @@ const install = {
             // 這部分可以參考看看是否需要增加 vram_low 或是 vram_med
             console.log("[X] VRAM: Not good! is less 8G | " + hardware.gpu.ram.fixed + "GB");
             console.log(`${i.__('VRAM below recommended value')}`);
-            inquirer
+            let ans = await inquirer
             .prompt([
                 {
                 type: 'list',
@@ -145,23 +146,23 @@ const install = {
                     `${i.__('None Skip this time')}`
                 ]
                 }
-            ])
-            .then(function(answers) {
-                console.log(answers.choice)
-                switch (answers.choice) {
-                    case `${i.__('Add lowvram')}`:
-                        arr.push("--lowvram")
-                        break;
-                    case `${i.__('Add medvram')}`:
-                        arr.push("--medvram")
-                        break;
-                    case `${i.__('None Skip this time')}`:
-                        console.log("Skip add vram args")
-                        break;
-                    default:
-                        break;
-                }
-            });
+            ]);
+            switch (ans.choice) {
+                case `${i.__('Add lowvram')}`:
+                    arr.push("--lowvram");
+                    break;
+                case `${i.__('Add medvram')}`:
+                    arr.push("--medvram");
+                    break;
+                case `${i.__('None Skip this time')}`:
+                    console.log("Skip add vram args");
+                    break;
+                default:
+                    break;
+            }
+
+            installer.cmd = arr.join(" ");
+            // console.log(installer.cmd)
         }else{
             console.log("[✔] VRAM: Good! is more 8G | " + hardware.gpu.ram.fixed + "GB");
         }
@@ -229,7 +230,6 @@ const platform = {
               hardware.gpu.name = nvddv[0];
               hardware.gpu.ram.total = nvddv[1];
               hardware.gpu.ram.fixed = nvddv[1]/1024;
-            //   console.log(`GPU: ${nvddv[0]} ${nvddv[1]/1024}GB DisplayDriveVersion:${nvddv[2].replace(/(\s*$)/g,"")}`);
               resolve(true);
           });
         });

@@ -10,6 +10,9 @@
     "RAM below recommended value": "RAM 低於建議數值(8G)",
     "VRAM below recommended value": "VRAM 低於建議數值(4G)",
     "Choose whether you add parameters": "選擇你是否添加參數",
+    "Add lowvram": "新增 lowvram(<4G)",
+    "Add medvram": "新增 medvram(<6G)",
+    "None Skip this time": "這次不要新增此參數",
     "Skip add vram args": "略過新增 VRAM 參數",
     "default": "default"
 }
