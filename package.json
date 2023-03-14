@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "description": "This is stable diffusion installer for windows",
   "main": "index.js",
-  "scripts": {},
-  "keywords": [
-    "stable",
-    "diffusion"
-  ],
+  "scripts": {
+    "build": "pkg index.js --output dist/Stable-Diffusion-Installer -t win"
+  },
   "author": "yomisana",
   "license": "MIT",
   "dependencies": {
@@ -20,5 +18,12 @@
     "inquirer": "^8.0.0",
     "progress": "^2.0.3",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  },
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": ["node_modules\\**\\*"]
   }
 }
