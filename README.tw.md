@@ -4,8 +4,9 @@
   <img alt="Release_Downloads" src="https://img.shields.io/github/downloads/Yomisana/Stable-Diffusion-Installer/total.png?" />
   <img alt="Discord" src="https://img.shields.io/static/v1?&message=Discord&color=5865F2&logo=Discord&logoColor=FFFFFF&label=Mjolnir+Studio" />
 </p>
-<h2><center><a herf="./README.md">English</a> | <a herf="#">Chinese</a></center></h2>
-    
+
+[English](./README.md)
+[中文](#)
 
 > Stable Diffusion Installer 讓 Stable Diffusion 可以更簡單的方式下載安裝
 

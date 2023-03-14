@@ -4,8 +4,9 @@
   <img alt="Release_Downloads" src="https://img.shields.io/github/downloads/Yomisana/Stable-Diffusion-Installer/total.png?" />
   <img alt="Discord" src="https://img.shields.io/static/v1?&message=Discord&color=5865F2&logo=Discord&logoColor=FFFFFF&label=Mjolnir+Studio" />
 </p>
-<h2><center><a herf="#">English</a> | <a herf="./README.tw.md">Chinese</a></center></h2>
-    
+
+[English](#)
+[中文](./README.tw.md)
 
 > Stable Diffusion Installer try make Stable Diffusion can more easy to install
 
