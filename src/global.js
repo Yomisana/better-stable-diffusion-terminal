@@ -35,7 +35,8 @@ global.installer = {
         url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
         save: `${__dirname}\\installer\\stable-diffusion.zip`,
         sd_name: "stable-diffusion.zip",
-        output: `${__dirname}\\bin`
+        output: `${__dirname}\\bin`,
+        sd_output_folder: `${__dirname}\\bin\\stable-diffusion-webui-master`
     }
 }
 

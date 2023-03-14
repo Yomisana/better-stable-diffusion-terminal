@@ -16,5 +16,8 @@
     "Skip add vram args": "略過新增 VRAM 參數",
     "downloading...": "下載中...",
     "complete!": "下載完畢!",
+    "where is the zip file location": "SD 壓縮檔存放路徑",
+    "where is the extract location": "SD 解壓縮輸出路徑",
+    "Extraction complete": "解壓縮完畢",
     "default": "default"
 }

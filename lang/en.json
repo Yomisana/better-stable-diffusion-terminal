@@ -16,5 +16,8 @@
     "Skip add vram args": "Skip add vram args",
     "downloading...": "Downloading...",
     "complete!": "Complete!",
+    "where is the zip file location": "where is the zip file location",
+    "where is the extract location": "where is the extract location",
+    "Extraction complete": "Extraction complete",
     "default": "default"
 }

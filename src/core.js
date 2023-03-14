@@ -242,10 +242,17 @@ const install = {
     },
     sd_extract: async function(zipname){
         try {
-            console.log(`where is the zip file location: ${installer.download.file_location}\\${zipname}` )
-            console.log(`where is the extract location:  ${installer.download.output}`)
+            console.log(`${i.__('where is the zip file location')}: ${installer.download.file_location}\\${zipname}` )
+            console.log(`${i.__('where is the extract location')}:  ${installer.download.output}`)
             await extract_zip(`${installer.download.save}`, { dir: `${installer.download.output}` })
-            console.log('Extraction complete');
+            console.log(`${i.__('Extraction complete')}!`);
+            fs.rename(installer.download.sd_output_folder, `${installer.download.output}\\stable-diffusion-webui`, (err) => {
+              if (err) {
+                console.error(err);
+                return;
+              }
+              console.log(`Successfully renamed '${installer.download.sd_output_folder}' to ${installer.download.output}\\stable-diffusion-webui.`);
+            });
           } catch (err) {
             // handle any errors
             console.log("error" + err)
