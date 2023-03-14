@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 const os = require('os');
 const path = require('path');
-
+const fs = require('fs');
 const $ = {
     close: function(){
         console.log(`[X] See you next time...Bye ;_;`);
@@ -226,15 +226,31 @@ const install = {
 
             installer.cmd = arr.join(" ");
             // console.log(installer.cmd)
-            install.download();
+            install.sd_download();
         }else{
             console.log("[✔] VRAM: Good! is more 8G | " + hardware.gpu.ram.fixed + "GB");
         }
     },
-    download: async function(){
+    sd_download: async function(){
         // https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip
         console.log(`${i.__('Start Download Stable Diffusion...')}`);
-        await downloadData("https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip", path.join(__dirname, "stable-diffusion.zip"));
+        if (!fs.existsSync(`${installer.download.file_location}`)) {
+            fs.mkdirSync(`${installer.download.file_location}`);
+        }
+        await downloadData(`${installer.download.url}`, path.join(`${installer.download.save}`));
+        install.sd_extract(`${installer.download.sd_name}`);
+    },
+    sd_extract: async function(zipname){
+        try {
+            console.log(`where is the zip file location: ${installer.download.file_location}\\${zipname}` )
+            console.log(`where is the extract location:  ${installer.download.output}`)
+            await extract_zip(`${installer.download.save}`, { dir: `${installer.download.output}` })
+            console.log('Extraction complete');
+          } catch (err) {
+            // handle any errors
+            console.log("error" + err)
+          }
+        // await extract_zip(zipname);
     }
 }
 

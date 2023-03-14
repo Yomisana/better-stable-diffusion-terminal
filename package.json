@@ -13,6 +13,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "config": "^3.3.9",
+    "extract-zip": "^2.0.1",
     "figlet": "^1.5.2",
     "fs-extra": "^11.1.0",
     "i18n": "^0.15.1",

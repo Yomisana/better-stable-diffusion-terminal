@@ -1,3 +1,4 @@
 node_modules
 package-lock.json
-src/stable-diffusion.zip
+src/installer
+src/bin
