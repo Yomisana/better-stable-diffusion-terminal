@@ -4,7 +4,7 @@
   "description": "This is stable diffusion installer for windows",
   "main": "index.js",
   "scripts": {
-    "build": "pkg index.js --output dist/Stable-Diffusion-Installer -t win"
+    "build": "pkg . --output ./dist/Stable-Diffusion-Installer --no-snapshot"
   },
   "author": "yomisana",
   "license": "MIT",
@@ -23,7 +23,9 @@
     "pkg": "^5.8.1"
   },
   "pkg": {
-    "scripts": "build/**/*.js",
-    "assets": ["node_modules\\**\\*"]
+    "assets": ["node_modules"]
+  },
+  "bin": {
+    "Stable-Diffusion-Installer": "index.js"
   }
 }

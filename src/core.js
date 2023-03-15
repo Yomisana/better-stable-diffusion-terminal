@@ -234,8 +234,9 @@ const install = {
     sd_download: async function(){
         // https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip
         console.log(`${i.__('Start Download Stable Diffusion...')}`);
+        console.log(process.cwd());
         if (!fs.existsSync(`${installer.download.file_location}`)) {
-            fs.mkdirSync(`${installer.download.file_location}`);
+            fs.mkdirSync(`${installer.download.file_location}`,{recursive:true});
         }
         await downloadData(`${installer.download.url}`, path.join(`${installer.download.save}`));
         install.sd_extract(`${installer.download.sd_name}`);

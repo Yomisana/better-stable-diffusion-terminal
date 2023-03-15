@@ -1,6 +1,7 @@
 
 const ProgressBar = require('progress');
 // Black Magic
+global.process = require('process')
 global.inquirer = require('inquirer');
 global.figlet = require('figlet');
 global.extract_zip = require('extract-zip')
@@ -31,12 +32,12 @@ global.installer = {
     vram_med: false, 
     cmd: null,
     download: {
-        file_location: `${__dirname}\\installer`,
+        file_location: `${process.cwd()}\\installer`,
         url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
-        save: `${__dirname}\\installer\\stable-diffusion.zip`,
+        save: `${process.cwd()}\\installer\\stable-diffusion.zip`,
         sd_name: "stable-diffusion.zip",
-        output: `${__dirname}\\bin`,
-        sd_output_folder: `${__dirname}\\bin\\stable-diffusion-webui-master`
+        output: `${process.cwd()}\\bin`,
+        sd_output_folder: `${process.cwd()}\\bin\\stable-diffusion-webui-master`
     }
 }
 
