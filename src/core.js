@@ -1,14 +1,14 @@
 const { exec } = require('child_process');
 const os = require('os');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 const $ = {
     close: function(){
         console.log(`[X] See you next time...Bye ;_;`);
         process.exit(0);
     },
     welcome: function(){  
-        figlet('Stable Diffusion Installer', function(err, data) {
+        figlet('SD Installer', function(err, data) {
             if (err) {
             console.log('Show ASCII Art Fail!...');
             console.dir(err);
@@ -247,13 +247,20 @@ const install = {
             console.log(`${i.__('where is the extract location')}:  ${installer.download.output}`)
             await extract_zip(`${installer.download.save}`, { dir: `${installer.download.output}` })
             console.log(`${i.__('Extraction complete')}!`);
+            
+            fs.copySync(installer.download.sd_output_folder, `${installer.download.output}\\stable-diffusion-webui`, { overwrite: true});
+            fs.rm(installer.download.sd_output_folder, {recursive:true});
+
+/*
             fs.rename(installer.download.sd_output_folder, `${installer.download.output}\\stable-diffusion-webui`, (err) => {
               if (err) {
                 console.error(err);
                 return;
               }
               console.log(`Successfully renamed '${installer.download.sd_output_folder}' to ${installer.download.output}\\stable-diffusion-webui.`);
-            });
+            });*/
+
+
           } catch (err) {
             // handle any errors
             console.log("error" + err)
