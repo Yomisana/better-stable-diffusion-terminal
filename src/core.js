@@ -136,20 +136,6 @@ const platform = {
             resolve();
         })
     },
-    // win_wimc: function(){
-    //     return new Promise(async(resolve) => {
-    //         exec('wmic path win32_VideoController get name', (err, stdout, stderr) => {
-    //             try {
-    //                 let output = stdout.replace(/^Name\s*/, '').replace(/\s*$/, '');
-    //                 hardware.gpu.name = output;
-    //                 resolve();
-    //             } catch (error) {
-    //                 console.error(`[ERROR - GPU] ${error}`);
-    //                 resolve();
-    //             }
-    //         });
-    //     })
-    // },
     getNvidiaDrivers: function(){
         return new Promise((resolve)=>{
           exec('nvidia-smi --query-gpu=gpu_name,memory.total,driver_version --format=csv,noheader,nounits',function (error, stdout, stderr) {
@@ -250,15 +236,6 @@ const install = {
             
             fs.copySync(installer.download.sd_output_folder, `${installer.download.output}\\stable-diffusion-webui`, { overwrite: true});
             fs.rm(installer.download.sd_output_folder, {recursive:true});
-
-/*
-            fs.rename(installer.download.sd_output_folder, `${installer.download.output}\\stable-diffusion-webui`, (err) => {
-              if (err) {
-                console.error(err);
-                return;
-              }
-              console.log(`Successfully renamed '${installer.download.sd_output_folder}' to ${installer.download.output}\\stable-diffusion-webui.`);
-            });*/
 
 
           } catch (err) {
