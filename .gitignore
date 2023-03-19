@@ -7,3 +7,4 @@ bin
 dist
 dist/Stable-Diffusion-Installer.exe
 installer/
+config/config.json

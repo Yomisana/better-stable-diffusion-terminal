@@ -292,29 +292,36 @@ const install = {
                 choices: [
                     `${i.__('Add lowvram')}`,
                     `${i.__('Add medvram')}`,
-                    `${i.__('None Skip this time')}`
+                    `${i.__('None Skip this time')}`,
+                    `${i.__('Back')}`
                 ]
                 }
             ]);
             switch (ans.choice) {
                 case `${i.__('Add lowvram')}`:
                     arr.push("--lowvram");
+                    installer.cmd = arr.join(" ");
+                    install.sd_download();
                     break;
                 case `${i.__('Add medvram')}`:
                     arr.push("--medvram");
+                    installer.cmd = arr.join(" ");
+                    install.sd_download();
                     break;
                 case `${i.__('None Skip this time')}`:
                     console.log(`${i.__('None Skip this time')}`);
+                    installer.cmd = arr.join(" ");
+                    install.sd_download();
+                    break;
+                case `${i.__('Back')}`:
+                    $.menu();
                     break;
                 default:
                     break;
             }
-
-            installer.cmd = arr.join(" ");
-            // console.log(installer.cmd)
-            install.sd_download();
         }else{
             console.log("[✔] VRAM: Good! is more 8G | " + hardware.gpu.ram.fixed + "GB");
+            install.sd_download();
         }
     },
     sd_download: async function(){

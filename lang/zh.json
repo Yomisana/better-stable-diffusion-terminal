@@ -8,7 +8,7 @@
     "Set Stable Diffusion Command Args...": "設定 Stable Diffusion 命令參數...",
     "Start Download Stable Diffusion...": "開始下載 Stable Diffusion...",
     "RAM below recommended value": "RAM 低於建議數值(8G)",
-    "VRAM below recommended value": "VRAM 低於建議數值(4G)",
+    "VRAM below recommended value": "VRAM 低於建議數值(4G/6G-可接受範圍可以不需要增加參數)",
     "Choose whether you add parameters": "選擇你是否添加參數",
     "Add lowvram": "新增 lowvram(<4G)",
     "Add medvram": "新增 medvram(<6G)",

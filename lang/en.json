@@ -8,7 +8,7 @@
     "Set Stable Diffusion Command Args...": "Set Stable Diffusion Command Args...",
     "Start Download Stable Diffusion...": "Start Download Stable Diffusion...",
     "RAM below recommended value": "RAM below recommended value(8G)",
-    "VRAM below recommended value": "VRAM below recommended value(8G)",
+    "VRAM below recommended value": "VRAM below recommended value(8G/6G-The acceptable range is no need to increase the parameters)",
     "Choose whether you add parameters": "Choose whether you add parameters",
     "Add lowvram": "Add lowvram(<4G)",
     "Add medvram": "Add medvram(<6G)",
