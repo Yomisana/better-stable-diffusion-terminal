@@ -17,7 +17,7 @@
 Now only support Windows  
 🚧Will future support macOS, Linux🚧  
 
-[Click me to download the app!] (#)
+[Click me to download the app!](https://github.com/Yomisana/stable-diffusion-installer/releases/latest/download/Stable-Diffusion-Installer.exe)
 <!-- https://github.com/Mjolnir-Studio/Mjolnir-Velocity/releases/download/v0.0.0/Mjolnir-Velocity-Installer.exe -->
 
 ## feature
