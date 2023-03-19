@@ -8,7 +8,7 @@
 [English](#) | 
 [中文](./README.tw.md)
 
-> Stable Diffusion Installer try make Stable Diffusion can more easy to install
+> Stable Diffusion Installer try make Stable Diffusion can more easy to install and easy download models
 
 ***
 
