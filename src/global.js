@@ -25,6 +25,14 @@ global.hardware = {
     }
 }
 
+global.config = require('./config');
+global.firstrun = undefined
+global.firstmenu = true
+global.settings = {
+    // file_location: `${process.cwd()}\\installer`,
+    save_location: `${process.cwd()}\\config`
+}
+
 global.commit = "****************************************************************";
 global.onlycheck = false;
 global.installer = {

@@ -2,11 +2,20 @@ require('./src/global');
 process.stdout.write(
     String.fromCharCode(27) + "]0;" + "Stable Diffusion Installer" + String.fromCharCode(7)
 );
-core.welcome();
-
-// let firstrun = config.get('FirstRun');
-// if(firstrun){
-//     core.welcome();
-// }else{
-//     core.menu();
-// }
+process.stdout.write('\x1B[2J\x1B[0f');
+config.load();
+firstrun = config.get("firstrun");
+// console.log(firstrun)
+if(firstrun === undefined){
+    config.default();
+    firstrun = config.get("firstrun");
+}
+if(firstrun){
+    core.welcome();
+    // console.log("welcome - the first run")
+    config.set("firstrun", false);
+}else{
+    i.setLocale(config.get("displaylang"));
+    core.menu();
+    // console.log("menu - not the first run")
+}

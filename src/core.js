@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const $ = {
     close: function(){
-        console.log(`[X] See you next time...Bye ;_;`);
+        console.log(`[\u2613 ] See you next time...Bye ;_;`);
         process.exit(0);
     },
     welcome: function(){  
@@ -32,11 +32,11 @@ const $ = {
                 switch (answers.choice) {
                     case 'English':
                         // console.log(`[*] English...`);
-                        displaylang = "en";i.setLocale(displaylang);
+                        config.set("displaylang", "en");displaylang = "en";i.setLocale(displaylang);
                         break;
                     case 'Chinese':
                         // console.log(`[*] Chinese...`);
-                        displaylang = "zh";i.setLocale(displaylang);
+                        config.set("displaylang", "zh");displaylang = "zh";i.setLocale(displaylang);
                         break;
                     case 'Exit':
                         $.close();
@@ -44,45 +44,66 @@ const $ = {
                     default:
                         break;
                 }
+                process.stdout.write('\x1B[2J\x1B[0f');
                 $.menu();
             });
         });
     },
     menu: function () {
-        inquirer
-        .prompt([
-            {
-            type: 'list',
-            name: 'choice',
-            message: `${i.__('Please choose what you wanna do?')}:`,
-            choices: [
-                `${i.__('Auto Install Stable Diffusion')}`,
-                `${i.__('Check System what settings recommended of My PC')}`,
-                `${i.__('Exit')}`
-            ]
+        figlet('Stable Diffusion', function(err, data) {
+            if (err) {
+                console.log('Show ASCII Art Fail!...');
+                console.dir(err);
+                return;
             }
-        ])
-        .then(function(answers) {
-            console.log(answers.choice)
-            switch (answers.choice) {
-                case `${i.__('Auto Install Stable Diffusion')}`:
-                    $.autoinstall();
-                    break;
-                case `${i.__('Check System what settings recommended of My PC')}`:
-                    onlycheck = true;
-                    $.check();
-                    break;
-                case `${i.__('Exit')}`:
-                    $.close();
-                    break;
-                default:
-                    break;
+            if(firstmenu){
+                console.log(data);
             }
+            inquirer
+            .prompt([
+                {
+                type: 'list',
+                name: 'choice',
+                message: `${i.__('Please choose what you wanna do?')}:`,
+                choices: [
+                    `${i.__('Auto Install Stable Diffusion')}`,
+                    `${i.__('Check System what settings recommended of My PC')}`,
+                    `${i.__('Exit')}`
+                ]
+                }
+            ])
+            .then(function(answers) {
+                firstmenu = false;
+                // console.log(answers.choice)
+                switch (answers.choice) {
+                    case `${i.__('Auto Install Stable Diffusion')}`:
+                        $.autoinstall();
+                        break;
+                    case `${i.__('Check System what settings recommended of My PC')}`:
+                        onlycheck = true;
+                        $.check();
+                        break;
+                    case `${i.__('Exit')}`:
+                        $.close();
+                        break;
+                    default:
+                        break;
+                }
+            });
         });
     },
-    autoinstall: async function(){
-        await $.check()
-        install.prepare();
+    autoinstall: function(){
+        process.stdout.write('\x1B[2J\x1B[0f');
+        figlet('Stable Diffusion', async function(err, data) {
+            if (err) {
+                console.log('Show ASCII Art Fail!...');
+                console.dir(err);
+                return;
+            }
+            console.log(data);
+            await $.check()
+            install.prepare();
+        });
     },
     check: function(){
         return new Promise(async(resolve) => {
@@ -166,7 +187,7 @@ const install = {
         let arr = [];
         // RAM 記憶體 低於 8G
         if(hardware.ram.fixed < 8){
-            console.log("[X] RAM: Not good! is less 8G | " + hardware.ram.fixed + "GB");
+            console.log("[\u2613 ] RAM: Not good! is less 8G | " + hardware.ram.fixed + "GB");
             console.log(`${i.__('RAM below recommended value')}`);
             arr.push("--lowram"); 
         }else{
@@ -176,12 +197,12 @@ const install = {
         // 顯卡記憶體 低於 4G
         if(hardware.gpu.ram.fixed < 4){
             // 請注意! 這邊是已經記憶體低到一個極致了。
-            console.log("[X] VRAM: Not good! is less 8G | " + hardware.gpu.ram.fixed + "GB");
+            console.log("[\u2613 ] VRAM: Not good! is less 8G | " + hardware.gpu.ram.fixed + "GB");
             console.log(`${i.__('VRAM below recommended value')}`);
             arr.push("--lowvram");
         }else if(hardware.gpu.ram.fixed < 8){ // 顯卡記憶體 低於 8G(4.1~ 7.9G)
             // 這部分可以參考看看是否需要增加 vram_low 或是 vram_med
-            console.log("[X] VRAM: Not good! is less 8G | " + hardware.gpu.ram.fixed + "GB");
+            console.log("[\u2613 ] VRAM: Not good! is less 8G | " + hardware.gpu.ram.fixed + "GB");
             console.log(`${i.__('VRAM below recommended value')}`);
             let ans = await inquirer
             .prompt([
