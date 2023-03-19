@@ -15,8 +15,7 @@ const $ = {
                 return;
             }
             console.log(data);
-            inquirer
-            .prompt([
+            inquirer.prompt([
                 {
                 type: 'list',
                 name: 'choice',
@@ -27,8 +26,7 @@ const $ = {
                     'Exit'
                 ]
                 }
-            ])
-            .then(function(answers) {
+            ]).then(function(answers) {
                 switch (answers.choice) {
                     case 'English':
                         // console.log(`[*] English...`);
@@ -59,25 +57,27 @@ const $ = {
             if(firstmenu){
                 console.log(data);
             }
-            inquirer
-            .prompt([
+            inquirer.prompt([
                 {
                 type: 'list',
                 name: 'choice',
                 message: `${i.__('Please choose what you wanna do?')}:`,
                 choices: [
                     `${i.__('Auto Install Stable Diffusion')}`,
+                    `${i.__('Install Model URL')}`,
                     `${i.__('Check System what settings recommended of My PC')}`,
                     `${i.__('Settings')}`,
                     `${i.__('Exit')}`
                 ]
                 }
-            ])
-            .then(function(answers) {
+            ]).then(function(answers) {
                 firstmenu = false;
                 switch (answers.choice) {
                     case `${i.__('Auto Install Stable Diffusion')}`:
                         $.autoinstall();
+                        break;
+                    case `${i.__('Install Model URL')}`:
+                        $.models_menu();
                         break;
                     case `${i.__('Check System what settings recommended of My PC')}`:
                         onlycheck = true;
@@ -104,8 +104,7 @@ const $ = {
                 return;
             }
             console.log(data);
-            inquirer
-            .prompt([
+            inquirer.prompt([
                 {
                 type: 'list',
                 name: 'choice',
@@ -115,8 +114,7 @@ const $ = {
                     `${i.__('Back')}`
                 ]
                 }
-            ])
-            .then(function(answers) {
+            ]).then(function(answers) {
                 switch (answers.choice) {
                     case `${i.__('Display Language')}`:
                         $.settings_lang_menu();
@@ -139,8 +137,7 @@ const $ = {
                 return;
             }
             console.log(data);
-            inquirer
-            .prompt([
+            inquirer.prompt([
                 {
                 type: 'list',
                 name: 'choice',
@@ -151,8 +148,7 @@ const $ = {
                     `${i.__('Back')}`
                 ]
                 }
-            ])
-            .then(function(answers) {
+            ]).then(function(answers) {
                 switch (answers.choice) {
                     case 'English':
                         config.set("displaylang", "en");displaylang = "en";i.setLocale(displaylang);
@@ -201,6 +197,41 @@ const $ = {
                 resolve();
             }
         })
+    },
+    models_menu: function(){
+        // Lora
+        // CHECKPOINT
+            // CHECKPOINT MERGE
+            // CHECKPOINT TRAINED
+        // TEXTUAL INVERSION
+        // HYPERNETWORK
+        console.log("only support default stable diffusion models and only support civitai website")
+        console.log("models_menu 目前沒有想法說這個目錄可以幹嘛...但能確定的是如果之後要在新增其他網站可以下載");
+        // inquirer menu: 說明: 給連結下載安裝，自動偵測到說Type 是哪一類的自動丟到那個目錄底下，如果沒有遇過就告知使用者，未知的就會被存放到Installer資料夾
+        // inquirer
+        // .prompt([
+        //     {
+        //     type: 'list',
+        //     name: 'choice',
+        //     message: `${i.__('Please choose what you wanna do?')}:`,
+        //     choices: [
+        //         `${i.__('Display Language')}`,
+        //         `${i.__('Back')}`
+        //     ]
+        //     }
+        // ])
+        // .then(function(answers) {
+        //     switch (answers.choice) {
+        //         case `${i.__('Display Language')}`:
+        //             $.settings_lang_menu();
+        //             break;
+        //         case `${i.__('Back')}`:
+        //             $.menu();
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // });
     }
 }
 
@@ -283,8 +314,7 @@ const install = {
             // 這部分可以參考看看是否需要增加 vram_low 或是 vram_med
             console.log("[\u2613 ] VRAM: Not good! is less 8G | " + hardware.gpu.ram.fixed + "GB");
             console.log(`${i.__('VRAM below recommended value')}`);
-            let ans = await inquirer
-            .prompt([
+            let ans = await inquirer.prompt([
                 {
                 type: 'list',
                 name: 'choice',
@@ -297,6 +327,7 @@ const install = {
                 ]
                 }
             ]);
+            
             switch (ans.choice) {
                 case `${i.__('Add lowvram')}`:
                     arr.push("--lowvram");
