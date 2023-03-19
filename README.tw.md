@@ -5,7 +5,7 @@
   <img alt="Discord" src="https://img.shields.io/static/v1?&message=Discord&color=5865F2&logo=Discord&logoColor=FFFFFF&label=Mjolnir+Studio" />
 </p>
 
-[English](./README.md)
+[English](./README.md) | 
 [中文](#)
 
 > Stable Diffusion Installer 讓 Stable Diffusion 可以更簡單的方式下載安裝

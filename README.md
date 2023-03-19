@@ -5,7 +5,7 @@
   <img alt="Discord" src="https://img.shields.io/static/v1?&message=Discord&color=5865F2&logo=Discord&logoColor=FFFFFF&label=Mjolnir+Studio" />
 </p>
 
-[English](#)
+[English](#) | 
 [中文](./README.tw.md)
 
 > Stable Diffusion Installer try make Stable Diffusion can more easy to install

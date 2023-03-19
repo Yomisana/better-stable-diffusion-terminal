@@ -10,9 +10,9 @@ const $ = {
     welcome: function(){  
         figlet('SD Installer', function(err, data) {
             if (err) {
-            console.log('Show ASCII Art Fail!...');
-            console.dir(err);
-            return;
+                console.log('Show ASCII Art Fail!...');
+                console.dir(err);
+                return;
             }
             console.log(data);
             inquirer
