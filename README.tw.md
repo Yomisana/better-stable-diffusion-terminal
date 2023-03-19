@@ -8,7 +8,7 @@
 [English](./README.md) | 
 [中文](#)
 
-> Stable Diffusion Installer 讓 Stable Diffusion 可以更簡單的方式下載安裝
+> Stable Diffusion Installer 讓 Stable Diffusion 可以更簡單的方式下載安裝與下載模型
 
 ***
 
