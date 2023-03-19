@@ -15,7 +15,7 @@ const $ = {
             if (!fs.existsSync(`${settings.save_location}`)) {
                 fs.mkdirSync(`${settings.save_location}`,{recursive:true});
             }
-            const configFile = path.resolve(__dirname, 'config', 'config.json');
+            const configFile = path.join(`${process.cwd()}\\config\\config.json`);
             // 載入設定檔
             nconf.file(configFile);
             resolve();

@@ -4,7 +4,7 @@
   "description": "This is stable diffusion installer for windows",
   "main": "index.js",
   "scripts": {
-    "build": "pkg . --output ./dist/Stable-Diffusion-Installer --no-snapshot"
+    "build": "nexe index.js --name helloworld --build --resource node_modules --output Stable-Diffusion-Installer"
   },
   "author": "yomisana",
   "license": "MIT",
@@ -18,16 +18,5 @@
     "nconf": "^0.12.0",
     "progress": "^2.0.3",
     "request": "^2.88.2"
-  },
-  "devDependencies": {
-    "pkg": "^5.8.1"
-  },
-  "pkg": {
-    "assets": [
-      "node_modules"
-    ]
-  },
-  "bin": {
-    "Stable-Diffusion-Installer": "index.js"
   }
 }
