@@ -19,5 +19,9 @@
     "where is the zip file location": "SD 壓縮檔存放路徑",
     "where is the extract location": "SD 解壓縮輸出路徑",
     "Extraction complete": "解壓縮完畢",
+    "Settings": "設定",
+    "Back": "返回",
+    "Display Language": "顯示語言",
+    "Please choose your laungue": "請選擇你要顯示的語言",
     "default": "default"
 }

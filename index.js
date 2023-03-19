@@ -15,6 +15,11 @@ if(firstrun){
     // console.log("welcome - the first run")
     config.set("firstrun", false);
 }else{
+    displaylang = config.get("displaylang")
+    if(displaylang === undefined){
+        displaylang = "en";
+        config.set("displaylang", displaylang);
+    }
     i.setLocale(config.get("displaylang"));
     core.menu();
     // console.log("menu - not the first run")

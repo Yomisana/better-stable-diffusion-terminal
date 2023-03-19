@@ -68,13 +68,13 @@ const $ = {
                 choices: [
                     `${i.__('Auto Install Stable Diffusion')}`,
                     `${i.__('Check System what settings recommended of My PC')}`,
+                    `${i.__('Settings')}`,
                     `${i.__('Exit')}`
                 ]
                 }
             ])
             .then(function(answers) {
                 firstmenu = false;
-                // console.log(answers.choice)
                 switch (answers.choice) {
                     case `${i.__('Auto Install Stable Diffusion')}`:
                         $.autoinstall();
@@ -83,8 +83,87 @@ const $ = {
                         onlycheck = true;
                         $.check();
                         break;
+                    case `${i.__('Settings')}`:
+                        $.settings_menu();
+                        break;
                     case `${i.__('Exit')}`:
                         $.close();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    },
+    settings_menu: function(){
+        process.stdout.write('\x1B[2J\x1B[0f');
+        figlet('SD Settings', function(err, data) {
+            if (err) {
+                console.log('Show ASCII Art Fail!...');
+                console.dir(err);
+                return;
+            }
+            console.log(data);
+            inquirer
+            .prompt([
+                {
+                type: 'list',
+                name: 'choice',
+                message: `${i.__('Please choose what you wanna do?')}:`,
+                choices: [
+                    `${i.__('Display Language')}`,
+                    `${i.__('Back')}`
+                ]
+                }
+            ])
+            .then(function(answers) {
+                switch (answers.choice) {
+                    case `${i.__('Display Language')}`:
+                        $.settings_lang_menu();
+                        break;
+                    case `${i.__('Back')}`:
+                        $.menu();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    },
+    settings_lang_menu: function(){
+        process.stdout.write('\x1B[2J\x1B[0f');
+        figlet('SD Settings', function(err, data) {
+            if (err) {
+                console.log('Show ASCII Art Fail!...');
+                console.dir(err);
+                return;
+            }
+            console.log(data);
+            inquirer
+            .prompt([
+                {
+                type: 'list',
+                name: 'choice',
+                message: `${i.__('Please choose your laungue')}:`,
+                choices: [
+                    'English',
+                    'Chinese',
+                    `${i.__('Back')}`
+                ]
+                }
+            ])
+            .then(function(answers) {
+                switch (answers.choice) {
+                    case 'English':
+                        config.set("displaylang", "en");displaylang = "en";i.setLocale(displaylang);
+                        $.settings_menu();
+                        break;
+                    case 'Chinese':
+                        config.set("displaylang", "zh");displaylang = "zh";i.setLocale(displaylang);
+                        $.settings_menu();
+                        break;
+                    case `${i.__('Back')}`:
+                        $.settings_menu();
                         break;
                     default:
                         break;
