@@ -110,7 +110,9 @@ global.getRequestJSON = function(url){
 
 global.getModelDetails = function(url){
 	return new Promise(async (resolve)=>{
-		const id = url.match(/^https?:\/\/(.*?)\/models\/([0-9]+)/ig).at(0).split('/').at(-1);
+		const id = url.match(/^https?:\/\/civitai\.com\/models\/([0-9]+)/ig)?.at(0).split('/').at(-1);
+		if(id === undefined) resolve({});
+		
 		const data = await getRequestJSON("https://civitai.com/api/v1/models/" + id);
 		
 		var obj = {
