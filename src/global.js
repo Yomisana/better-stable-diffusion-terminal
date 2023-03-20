@@ -64,8 +64,8 @@ global.downloadData = function(url, path, name) {
     downloadinfo.targetSize = 0
     downloadinfo.downloadedSize = 0
     // progressBar | 進度條
-    let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent`, { 
-      total: 100 
+    let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
+      total: 10
     }); 
 
     // request 初次回傳後，提取目標檔案實際大小
@@ -79,7 +79,7 @@ global.downloadData = function(url, path, name) {
         bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
         bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
         if (bar.complete) {
-            console.log(`${i.__('complete!')} ${path+"\\"+name}`);
+          console.log(`${i.__('complete!')} ${path+"\\"+name}`);
         }
     });
 
