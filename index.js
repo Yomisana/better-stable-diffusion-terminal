@@ -5,14 +5,12 @@ process.stdout.write(
 process.stdout.write('\x1B[2J\x1B[0f');
 config.load();
 firstrun = config.get("firstrun");
-// console.log(firstrun)
 if(firstrun === undefined){
     config.default();
     firstrun = config.get("firstrun");
 }
 if(firstrun){
     core.welcome();
-    // console.log("welcome - the first run")
     config.set("firstrun", false);
 }else{
     displaylang = config.get("displaylang")
@@ -22,5 +20,4 @@ if(firstrun){
     }
     i.setLocale(config.get("displaylang"));
     core.menu();
-    // console.log("menu - not the first run")
 }

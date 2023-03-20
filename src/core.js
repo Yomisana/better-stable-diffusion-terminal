@@ -63,8 +63,8 @@ const $ = {
                 name: 'choice',
                 message: `${i.__('Please choose what you wanna do?')}:`,
                 choices: [
-                    `${i.__('Auto Install Stable Diffusion')}`,
                     `${i.__('Install Model URL')}`,
+                    `${i.__('Auto Install Stable Diffusion')}`,
                     `${i.__('Check System what settings recommended of My PC')}`,
                     `${i.__('Settings')}`,
                     `${i.__('Exit')}`
@@ -205,33 +205,94 @@ const $ = {
             // CHECKPOINT TRAINED
         // TEXTUAL INVERSION
         // HYPERNETWORK
-        console.log("only support default stable diffusion models and only support civitai website")
-        console.log("models_menu 目前沒有想法說這個目錄可以幹嘛...但能確定的是如果之後要在新增其他網站可以下載");
+        // console.log("only support default stable diffusion models and only support civitai website")
+        // console.log("models_menu 目前沒有想法說這個目錄可以幹嘛...但能確定的是如果之後要在新增其他網站可以下載");
         // inquirer menu: 說明: 給連結下載安裝，自動偵測到說Type 是哪一類的自動丟到那個目錄底下，如果沒有遇過就告知使用者，未知的就會被存放到Installer資料夾
-        // inquirer
-        // .prompt([
-        //     {
-        //     type: 'list',
-        //     name: 'choice',
-        //     message: `${i.__('Please choose what you wanna do?')}:`,
-        //     choices: [
-        //         `${i.__('Display Language')}`,
-        //         `${i.__('Back')}`
-        //     ]
-        //     }
-        // ])
-        // .then(function(answers) {
-        //     switch (answers.choice) {
-        //         case `${i.__('Display Language')}`:
-        //             $.settings_lang_menu();
-        //             break;
-        //         case `${i.__('Back')}`:
-        //             $.menu();
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // });
+        inquirer.prompt([
+            {
+            type: 'list',
+            name: 'choice',
+            message: `${i.__('Please choose what you wanna do?')}:`,
+            choices: [
+                `${i.__('Download Model')}`,
+                `${i.__('Back')}`
+            ]
+            }
+        ])
+        .then(function(answers) {
+            switch (answers.choice) {
+                case `${i.__('Download Model')}`:
+                        inquirer.prompt([
+                            {
+                            name: 'url',
+                            message: `${i.__('Past url here')}:`
+                            },
+                        ])
+                        .then(async answers => {
+                            console.info(`${i.__('url')}: ${answers.url}`);
+                            let data = await getModelDetails(answers.url);
+                            if(data.id === undefined)console.log("Please retry again Tips: only support civitai");
+                            else{
+                                if (!fs.existsSync(`${installer.download.file_location}`)) {
+                                    fs.mkdirSync(`${installer.download.file_location}`,{recursive:true});
+                                }
+                                // 選擇版本:
+                                console.log(commit)
+                                console.log(`id: ${data.id}`)
+                                console.log(`name: ${data.name}`)
+                                console.log(`type: ${data.type}`)
+                                console.log(`author: ${data.author}`)
+                                console.log(commit);
+                                var versionList = [];
+                                for(let o in data.version){
+                                    versionList.push(o);
+                                }
+                                inquirer.prompt([
+                                    {
+                                    type: 'list',
+                                    name: 'choice',
+                                    message: `${i.__('Please choose your version')}:`,
+                                    choices: versionList
+                                    }
+                                ]).then(async function(answers) {
+                                    console.log(answers.choice);
+
+                                    if(data.version[answers.choice].download.length === 1){
+                                        await downloadData(data.version[answers.choice].download.at(0).downloadUrl, `${process.cwd()}\\installer\\${data.version[answers.choice].download.at(0).name}`);
+                                    }
+                                    else{
+                                        versionList = [];
+                                        data.version[answers.choice].download.forEach(d => {
+                                            versionList.push(d.name);
+                                        });
+
+                                        inquirer.prompt([
+                                            {
+                                            type: 'list',
+                                            name: 'choice',
+                                            message: `${i.__('Please choose your version')}:`,
+                                            choices: versionList
+                                            }
+                                        ]).then(async function(versionType) {
+                                            for(let d of data.version[answers.choice].download){
+                                                if(d.name === versionType.choice){
+                                                    console.log(d.downloadUrl);
+                                                    await downloadData(d.downloadUrl, `${process.cwd()}\\installer\\${d.name}`);
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    break;
+                case `${i.__('Back')}`:
+                    $.menu();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 }
 

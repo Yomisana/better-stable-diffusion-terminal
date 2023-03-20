@@ -52,43 +52,119 @@ global.installer = {
     }
 }
 
-global.downloadProgress = {
-    total: 0,
-    now: 0
-};
+// global.downloadProgress = {
+//     total: 0,
+//     now: 0
+// };
 
-global.downloadData = function(url,path){
+// global.downloadData = function(url,path){
+//     return new Promise((resolve, reject) => {
+//         total = 0;
+//         now = 0;
+//         let startTime = Date.now();
+//         const bar = new ProgressBar(`${i.__('downloading...')}[:bar] :percent :speed`, { total: 100 });
+      
+//         const req = request(url);
+//         const stream = req.pipe(fs.createWriteStream(path));
+      
+//         req.on('response', function(data) {
+//             downloadProgress.total = parseInt(data.headers['content-length']);
+//         });
+      
+//         req.on('data', function(chunk) {
+//             downloadProgress.now += chunk.length;
+//             now += chunk.length;
+//             const speed = ((now / 1024) / ((Date.now() - startTime) / 1000)).toFixed(2); // 計算下載速度，單位為 KB/s
+//             bar.update(downloadProgress.now / downloadProgress.total, { speed: `${speed}KB/s` }); // 顯示下載速度
+//             if (bar.complete) {
+//                 console.log(`${i.__('complete!')}`);
+//             }
+//         });
+      
+//         stream.on('finish', function() {
+//             resolve('ok');
+//         });
+      
+//         stream.on('error', function(err) {
+//             reject(`stream error: ${err} in url ${url} at file ${path}`);
+//         });
+//     });
+// };
+global.downloadProgress = {
+    etaTime: 0,
+};
+global.downloadData = function(url, path) {
     return new Promise(( resolve, reject ) => {
-        total = 0;
-        now = 0;
-        const bar = new ProgressBar(`${i.__('downloading...')}[:bar] :percent`, { total: 100 });
+        let targetSize = 0;
+        let downloadedSize = 0;
+        let prevDownloadedSize = 0;
+        let prevTime = Date.now();
+        const bar = new ProgressBar(`${i.__('downloading...')}[:bar] :percent ${convertSize(downloadedSize)}/${convertSize(targetSize)} --:--:--`, { total: 100 });
         const req = request(url);
         const stream = req.pipe(fs.createWriteStream(path));
-
+        
         req.on('response',function(data){
-            //console.log(data.headers['content-length']);
-            downloadProgress.total = parseInt(data.headers['content-length']);
+            targetSize = parseInt(data.headers['content-length']);
+            bar.fmt = `${i.__('downloading...')}[:bar] :percent ${convertSize(downloadedSize)}/${convertSize(targetSize)} --:--:--`;
         });
-
+      
         req.on('data', function (chunk) {
-            //console.log(chunk.length);
-            downloadProgress.now += chunk.length;
-            bar.update(downloadProgress.now/downloadProgress.total);
+            downloadedSize += chunk.length;
+            const currentTime = Date.now();
+            const deltaSize = downloadedSize - prevDownloadedSize;
+            const deltaTime = currentTime - prevTime;
+            const speed = deltaSize / deltaTime; // in bytes/ms
+            const remainingSize = targetSize - downloadedSize;
+            const remainingTime = Math.floor(remainingSize / speed); // in ms
+            prevDownloadedSize = downloadedSize;
+            prevTime = currentTime;
+            bar.update(downloadedSize/targetSize, {
+                eta: formatTime(remainingTime)
+            });
+            bar.fmt = `${i.__('downloading...')}[:bar] :percent ${convertSize(downloadedSize)}/${convertSize(targetSize)} ${formatTime(remainingTime)}`;
             if (bar.complete) {
-                console.log(`${i.__('complete!')}`);
+                console.log(`${i.__('complete!')} ${path}`);
             }
         });
-
-
+      
+        function convertSize(size) {
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let unitIndex = 0;
+            while(size >= 1024 && unitIndex < units.length - 1) {
+              size /= 1024;
+              unitIndex++;
+            }
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
+        }
+      
+        function formatTime(ms) {
+            const sec = Math.floor(ms / 1000) % 60;
+            const min = Math.floor(ms / (1000 * 60)) % 60;
+            const hour = Math.floor(ms / (1000 * 60 * 60));
+            let time = `${pad(hour)}:${pad(min)}:${pad(sec)}`
+            if(time === "00:00:00"){
+                return downloadProgress.etaTime;
+            }else{
+                downloadProgress.etaTime = time;
+                return downloadProgress.etaTime;
+            }
+        }
+      
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+      
         stream.on('finish',function(){
             resolve('ok');
         });
-
+      
         stream.on('error',function(err){
             reject(`stream error: ${err} in url ${url} at file ${path}`);
         });
     });
 };
+
+
 
 global.getRequestJSON = function(url){
 	return new Promise((resolve, reject)=>{
@@ -111,7 +187,7 @@ global.getRequestJSON = function(url){
 global.getModelDetails = function(url){
 	return new Promise(async (resolve)=>{
 		const id = url.match(/^https?:\/\/civitai\.com\/models\/([0-9]+)/ig)?.at(0).split('/').at(-1);
-		if(id === undefined) resolve({});
+		if(id === undefined){resolve({});return;}
 		
 		const data = await getRequestJSON("https://civitai.com/api/v1/models/" + id);
 		
@@ -120,18 +196,17 @@ global.getModelDetails = function(url){
 			name: data.name,
 			type: data.type,
 			author: data.creator.username,
-			version: []
+			version: {}
 		};
 		
 		data.modelVersions.forEach(m => {
-			obj.version.push({
-				name: m.name,
-				createdAt: m.createdAt,
+            obj.version[m.name] = {
+                createdAt: m.createdAt,
 				updatedAt: m.updatedAt,
 				baseModel: m.baseModel,
-				downloadUrl: m.downloadUrl,
+				download: m.files,
 				images: m.images.at(0).url
-			});
+            };
 		});
 		
 		resolve(obj);

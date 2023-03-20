@@ -21,8 +21,12 @@
     "Extraction complete": "Extraction complete",
     "Settings": "Settings",
     "Back": "Back",
+    "url": "url",
     "Display Language": "Display Language",
     "Please choose your laungue": "Please choose your laungue",
     "Install Model URL": "Install Model URL",
+    "Download Model": "Download Model",
+    "Past url here": "Past url here(supoort civitai)",
+    "Please choose your version": "Please choose your version",
     "default": "default"
 }

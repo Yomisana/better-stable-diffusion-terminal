@@ -21,8 +21,12 @@
     "Extraction complete": "解壓縮完畢",
     "Settings": "設定",
     "Back": "返回",
+    "url": "網址",
     "Display Language": "顯示語言",
     "Please choose your laungue": "請選擇你要顯示的語言",
     "Install Model URL": "安裝模型網址",
+    "Download Model": "下載模型",
+    "Past url here": "在這裡貼上網址(支援civitai)",
+    "Please choose your version": "請選擇你的版本",
     "default": "default"
 }
