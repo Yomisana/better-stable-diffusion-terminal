@@ -4,7 +4,7 @@
   "description": "This is stable diffusion installer for windows",
   "main": "index.js",
   "scripts": {
-    "build": "nexe index.js --build --resource node_modules --output ./dist/Stable-Diffusion-Installer --ico ./build/og256.ico"
+    "build": "nexe index.js --build --resource node_modules --output ./dist/Stable-Diffusion-Installer"
   },
   "author": "yomisana",
   "license": "MIT",
