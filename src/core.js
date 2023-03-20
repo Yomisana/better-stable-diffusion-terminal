@@ -258,7 +258,8 @@ const $ = {
                                     console.log(answers.choice);
 
                                     if(data.version[answers.choice].download.length === 1){
-                                        await downloadData(data.version[answers.choice].download.at(0).downloadUrl, `${process.cwd()}\\installer\\${data.version[answers.choice].download.at(0).name}`);
+                                        await downloadData(data.version[answers.choice].download.at(0).downloadUrl, `${process.cwd()}\\installer`,`${data.version[answers.choice].download.at(0).name}`);
+                                        $.models_menu();
                                     }
                                     else{
                                         versionList = [];
@@ -277,7 +278,8 @@ const $ = {
                                             for(let d of data.version[answers.choice].download){
                                                 if(d.name === versionType.choice){
                                                     console.log(d.downloadUrl);
-                                                    await downloadData(d.downloadUrl, `${process.cwd()}\\installer\\${d.name}`);
+                                                    await downloadData(d.downloadUrl, `${process.cwd()}\\installer`,`${d.name}`);
+                                                    $.models_menu();
                                                 }
                                             }
                                         });
@@ -423,16 +425,16 @@ const install = {
         if (!fs.existsSync(`${installer.download.file_location}`)) {
             fs.mkdirSync(`${installer.download.file_location}`,{recursive:true});
         }
-        await downloadData(`${installer.download.url}`, path.join(`${installer.download.save}`));
+        await downloadData(`${installer.download.url}`, path.join(`${installer.download.file_location}`),`${installer.download.sd_name}`);
         install.sd_extract(`${installer.download.sd_name}`);
     },
     sd_extract: async function(zipname){
         try {
             console.log(`${i.__('where is the zip file location')}: ${installer.download.file_location}\\${zipname}` )
-            console.log(`${i.__('where is the extract location')}:  ${installer.download.output}`)
-            await extract_zip(`${installer.download.save}`, { dir: `${installer.download.output}` })
+            console.log(`${i.__('where is the extract location')}: ${installer.download.output}`)
+            await extract_zip(`${installer.download.file_location}\\${zipname}`, { dir: `${installer.download.output}` })
             console.log(`${i.__('Extraction complete')}!`);
-            
+            $.menu()
             fs.copySync(installer.download.sd_output_folder, `${installer.download.output}\\stable-diffusion-webui`, { overwrite: true});
             fs.rm(installer.download.sd_output_folder, {recursive:true});
 
