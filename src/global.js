@@ -1,5 +1,8 @@
 
 const ProgressBar = require('progress');
+const request = require('request');
+const fs = require('fs-extra');
+
 // Black Magic
 global.process = require('process')
 global.inquirer = require('inquirer');
@@ -49,8 +52,6 @@ global.installer = {
     }
 }
 
-const request = require('request');
-const fs = require('fs-extra');
 global.downloadProgress = {
     total: 0,
     now: 0
@@ -88,3 +89,49 @@ global.downloadData = function(url,path){
         });
     });
 };
+
+global.getRequestJSON = function(url){
+	return new Promise((resolve, reject)=>{
+        request.get(
+          {
+            url: url
+          },
+          function (err, httpResponse, body) {
+            if(err)
+                reject(err);
+            else{
+                var obj = JSON.parse(body.trim());
+                resolve(obj);
+            }
+          }
+        );
+	});
+}
+
+global.getModelDetails = function(url){
+	return new Promise(async (resolve)=>{
+		const id = url.match(/^https?:\/\/(.*?)\/models\/([0-9]+)/ig).at(0).split('/').at(-1);
+		const data = await getRequestJSON("https://civitai.com/api/v1/models/" + id);
+		
+		var obj = {
+			id: id,
+			name: data.name,
+			type: data.type,
+			author: data.creator.username,
+			version: []
+		};
+		
+		data.modelVersions.forEach(m => {
+			obj.version.push({
+				name: m.name,
+				createdAt: m.createdAt,
+				updatedAt: m.updatedAt,
+				baseModel: m.baseModel,
+				downloadUrl: m.downloadUrl,
+				images: m.images.at(0).url
+			});
+		});
+		
+		resolve(obj);
+	});
+}
