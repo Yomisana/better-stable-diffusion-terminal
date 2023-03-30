@@ -1,10 +1,10 @@
 {
-  "name": "stable-diffusion-installer",
+  "name": "better-stable-diffusion",
   "version": "1.0.0",
-  "description": "This is stable diffusion installer for windows",
+  "description": "This is better stable diffusion for windows",
   "main": "index.js",
   "scripts": {
-    "build": "nexe index.js --build --resource node_modules --output ./dist/Stable-Diffusion-Installer"
+    "build": "nexe index.js --build --resource node_modules --output ./dist/Better-Stable-Diffusion"
   },
   "author": "yomisana",
   "license": "MIT",

@@ -9,7 +9,7 @@ global.inquirer = require('inquirer');
 global.figlet = require('figlet');
 global.extract_zip = require('extract-zip')
 global.displaylang = null;
-global.i = require('../lang/i18n.js');
+global.i = require('./lang/i18n.js');
 // not cool things
 global.core = require('./core');
 
