@@ -3,6 +3,7 @@
     "Auto Install Stable Diffusion": "自動安裝 Stable Diffusion",
     "Check System what settings recommended of My PC": "檢查電腦推薦的設置",
     "Exit": "退出",
+    "Back Menu": "回到主選單",
     "Checking your PC hardware now...Please wait...": "檢查你的電腦硬體中...請稍後...",
     "unsupport this system please change other system open this app": "你的作業系統並不支援 stable diffusion installer 請更換成其他作業系統在執行",
     "Set Stable Diffusion Command Args...": "設定 Stable Diffusion 命令參數...",
@@ -30,5 +31,9 @@
     "Please choose your version": "請選擇你的版本",
     "Prepare to download": "準備下載",
     "downloading": "下載....",
+    "Start Scan...": "開始掃描...",
+    "Done!": "完成!",
+    "pressAnyKey": "按下任意按鍵繼續",
+    "pressAnyKey cancel": "Ctrl + C",
     "default": "default"
 }

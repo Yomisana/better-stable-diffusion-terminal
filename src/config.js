@@ -1,7 +1,3 @@
-const nconf = require('nconf');
-const path = require('path');
-const fs = require('fs-extra');
-
 const $ = {
     default: function(){
         // 設定預設值
@@ -12,10 +8,10 @@ const $ = {
     load: function(){
         // 設定檔路徑
         return new Promise(async(resolve) => {
-            if (!fs.existsSync(`${settings.save_location}`)) {
-                fs.mkdirSync(`${settings.save_location}`,{recursive:true});
+            if (!fs.existsSync(`${app_location.folder.settings}`)) {
+                fs.mkdirSync(`${app_location.folder.settings}`,{recursive:true});
             }
-            const configFile = path.join(`${process.cwd()}\\config\\config.json`);
+            const configFile = path.join(`${app_location.file.config}`);
             // 載入設定檔
             nconf.file(configFile);
             resolve();

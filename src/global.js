@@ -1,151 +1,103 @@
-
-const ProgressBar = require('progress');
-const request = require('request');
-const fs = require('fs-extra');
-
-// Black Magic
-global.process = require('process')
-global.inquirer = require('inquirer');
+// 3rd Module
 global.figlet = require('figlet');
-global.extract_zip = require('extract-zip')
-global.displaylang = null;
-global.i = require('./lang/i18n.js');
-// not cool things
-global.core = require('./core');
-
+global.fs = require('fs-extra');
+global.path = require('path');
+global.nconf = require('nconf');
+global.inquirer = require('inquirer');
+global.os = require('os');
+global.osinfo = require('systeminformation');
+global.pressAnyKey = require('press-any-key');
+// Main Module
+global.i = require('./lang/i18n.js');global.displaylang = null;
+global.config = require('./config');
+global.menu = require('./menu');
+// Main
+global.app_name = "Better Stable Diffusion"
+global.app_location = {
+    folder: {
+        settings: `${process.cwd()}\\config`,
+    },
+    file: {
+        config: `${process.cwd()}\\config\\config.json`,
+    },
+}
 global.hardware = {
     cpu: null,
     ram: {
         total: null,
         fixed: null,
     },
-    gpu: {
-        name: null,
-        ram: {
-            total: null,
-            fixed: null,
-        }
-    }
+    gpu: null,
+    disk: null,
+    fullreport: {
+        cpu: false,
+        ram: false,
+        gpu: false,
+        disk: false,
+    },
 }
 
-global.config = require('./config');
-global.firstrun = undefined
-global.firstmenu = true
-global.settings = {
-    // file_location: `${process.cwd()}\\installer`,
-    save_location: `${process.cwd()}\\config`
-}
 
-global.commit = "****************************************************************";
-global.onlycheck = false;
-global.installer = {
-    vram_low: false, 
-    vram_med: false, 
-    cmd: null,
-    download: {
-        file_location: `${process.cwd()}\\installer`,
-        url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
-        sd_name: "stable-diffusion.zip",
-        output: `${process.cwd()}\\bin`,
-        sd_output_folder: `${process.cwd()}\\bin\\stable-diffusion-webui-master`
-    }
-}
-
-global.downloadinfo = {
-    targetSize: 0, // 目標檔案大小 (KB)
-    downloadedSize: 0 // 目標已下載檔案大小 (KB)
-}
-  
-global.downloadData = function(url, path, name) {
-  return new Promise(( resolve, reject ) => {
-    // request | 請求
-    const req = request(url);
-    const stream = req.pipe(fs.createWriteStream(path+"\\"+name));
-    downloadinfo.targetSize = 0
-    downloadinfo.downloadedSize = 0
-    // progressBar | 進度條
-    let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
-      total: 10
-    }); 
-
-    // request 初次回傳後，提取目標檔案實際大小
-    req.on('response',function(data){
-      downloadinfo.targetSize = parseInt(data.headers['content-length']);
-    });
-
-    // request 下載期間顯示
-    req.on('data', function (chunk) {
-        downloadinfo.downloadedSize += chunk.length; 
-        bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
-        bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
-        if (bar.complete) {
-          console.log(`${i.__('complete!')} ${path+"\\"+name}`);
-        }
-    });
-
-    stream.on('finish',function(){
-      resolve('ok');
-    });
-
-    stream.on('error',function(err){
-      reject(`stream error: ${err} in url ${url} at file ${path}`);
-    });
-
-    function convertSize(size) {
-      const units = ['B', 'KB', 'MB', 'GB'];
-      let unitIndex = 0;
-      while(size >= 1024 && unitIndex < units.length - 1) {
-        size /= 1024;
-        unitIndex++;
-      }
-      return `${size.toFixed(2)} ${units[unitIndex]}`;
-    }
-  })
-}
-
-global.getRequestJSON = function(url){
-	return new Promise((resolve, reject)=>{
-        request.get(
-          {
-            url: url
-          },
-          function (err, httpResponse, body) {
-            if(err)
-                reject(err);
-            else{
-                var obj = JSON.parse(body.trim());
-                resolve(obj);
+// Function
+global.cmd = {
+    title: function(text){
+        return new Promise((resolve, reject)=>{
+            try {
+                if(text.length == 0){
+                    // console.log(`目前Title 為: ${app_name}`)
+                    String.fromCharCode(27) + "]0;" + `${app_name}` + String.fromCharCode(7);
+                }else{
+                    // console.log(`目前Title 為: ${text}`)
+                    String.fromCharCode(27) + "]0;" + `${text}` + String.fromCharCode(7);
+                }
+            } catch (error) {
+                // console.log(`目前Title 為: ${app_name}`)
+                String.fromCharCode(27) + "]0;" + `${app_name}` + String.fromCharCode(7);
             }
-          }
-        );
-	});
+            resolve();
+        });
+    },
+    clear: function(){
+        return new Promise((resolve, reject)=>{
+            process.stdout.write('\x1B[2J\x1B[0f');
+            resolve();
+        });
+    }
 }
 
-global.getModelDetails = function(url){
-	return new Promise(async (resolve)=>{
-		const id = url.match(/^https?:\/\/civitai\.com\/models\/([0-9]+)/ig)?.at(0).split('/').at(-1);
-		if(id === undefined){resolve({});return;}
-		
-		const data = await getRequestJSON("https://civitai.com/api/v1/models/" + id);
-		
-		var obj = {
-			id: id,
-			name: data.name,
-			type: data.type,
-			author: data.creator.username,
-			version: {}
-		};
-		
-		data.modelVersions.forEach(m => {
-            obj.version[m.name] = {
-                createdAt: m.createdAt,
-				updatedAt: m.updatedAt,
-				baseModel: m.baseModel,
-				download: m.files,
-				images: m.images.at(0).url
-            };
-		});
-		
-		resolve(obj);
-	});
+global.color = function(pick){
+    if(pick == "red"){
+        return "\x1b[31m%s\x1b[0m"
+    }else if(pick == "green"){
+        return "\x1b[32m%s\x1b[0m"
+    }else if(pick == "yellow"){
+        return "\x1b[33m%s\x1b[0m"
+    }else if(pick == "blue"){
+        return "\x1b[34m%s\x1b[0m"
+    }else if(pick == "cyan"){
+        return "\x1b[36m%s\x1b[0m"
+    }else{
+        return ""
+    }
+}
+
+global.ascii_art = function(x,y){
+    return new Promise((resolve, reject)=>{
+        figlet(`${y}`, async function(err, data) {
+            if (err) {
+                console.error('Show ASCII Art Fail!...');
+                console.dir(err);
+                return;
+            }
+            // let ascii_color = await color(x);
+            // console.log(ascii_color, data);
+            console.log(await color(x),data);
+            resolve();
+        });
+    });
+}
+
+global.close = function(){
+    console.log(`[\u2613 ] See you next time...Bye ;_;`);
+    process.exit(0);
 }

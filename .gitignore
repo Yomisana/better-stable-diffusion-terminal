@@ -4,6 +4,7 @@ src/installer
 src/bin
 src/config
 bin
+temp
 dist
 dist/Stable-Diffusion-Installer.exe
 installer/

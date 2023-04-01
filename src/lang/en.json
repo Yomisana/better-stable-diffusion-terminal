@@ -3,6 +3,7 @@
     "Auto Install Stable Diffusion": "Auto Install Stable Diffusion",
     "Check System what settings recommended of My PC": "Check System what settings recommended of My PC",
     "Exit": "Exit",
+    "Back Menu": "Back Menu",
     "Checking your PC hardware now...Please wait...": "Checking your PC hardware now...Please wait...",
     "unsupport this system please change other system open this app": "unsupport this system please change other system open this app",
     "Set Stable Diffusion Command Args...": "Set Stable Diffusion Command Args...",
@@ -30,5 +31,10 @@
     "Please choose your version": "Please choose your version",
     "Prepare to download": "Prepare Download",
     "downloading": "Downloading.....",
+    "Start Scan...": "Start Scan...",
+    "Done!": "Done!",
+    "pressAnyKey": "Press any key to continue",
+    "pressAnyKey cancel": "Ctrl + C",
+    "scan hardware info...": "scan hardware info...",
     "default": "default"
 }

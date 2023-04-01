@@ -1,23 +1,34 @@
 require('./src/global');
-process.stdout.write(
-    String.fromCharCode(27) + "]0;" + "Stable Diffusion Installer" + String.fromCharCode(7)
-);
-process.stdout.write('\x1B[2J\x1B[0f');
-config.load();
-firstrun = config.get("firstrun");
-if(firstrun === undefined){
-    config.default();
-    firstrun = config.get("firstrun");
+// env settings
+cmd.clear();cmd.title("Better Stable Diffusion");
+
+// app settings
+config.load()
+    .then(debug())
+    .then(init());
+
+function debug(){
+    // console.log("I am First");
 }
-if(firstrun){
-    core.welcome();
-    config.set("firstrun", false);
-}else{
-    displaylang = config.get("displaylang")
-    if(displaylang === undefined){
-        displaylang = "en";
-        config.set("displaylang", displaylang);
+
+async function init(){
+    await ascii_art("yellow",app_name);
+    // active
+    firstrun = config.get("firstrun");
+    if(firstrun === undefined){
+        config.default();
+        firstrun = config.get("firstrun");
     }
-    i.setLocale(config.get("displaylang"));
-    core.menu();
+    if(firstrun){
+        menu.welcome();
+        config.set("firstrun", false);
+    }else{
+        displaylang = config.get("displaylang")
+        if(displaylang === undefined){
+            displaylang = "en";
+            config.set("displaylang", displaylang);
+        }
+        i.setLocale(config.get("displaylang"));
+        menu.main();
+    }
 }
