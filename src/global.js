@@ -11,6 +11,7 @@ global.pressAnyKey = require('press-any-key');
 global.i = require('./lang/i18n.js');global.displaylang = null;
 global.config = require('./config');
 global.menu = require('./menu');
+global.check = require('./checkpc');
 // Main
 global.app_name = "Better Stable Diffusion"
 global.app_location = {
