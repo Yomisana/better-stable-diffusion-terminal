@@ -14,6 +14,7 @@ None
 # Hardware equipment selection
 ## Minimum configuration:
 > This low configuration issue requires debugging hardware on your own
+
 |Hardware Name    |   Require               |
 |----             |    ----                 |
 |CPU(處理器)      | None                   |

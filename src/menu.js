@@ -20,7 +20,7 @@ const $ = {
                     break;
                 case 'Chinese':
                     // console.log(`[*] Chinese...`);
-                    config.set("displaylang", "zh");displaylang = "zh";i.setLocale(displaylang);
+                    config.set("displaylang", "tw");displaylang = "tw";i.setLocale(displaylang);
                     break;
                 case 'Exit':
                     close();
@@ -121,7 +121,7 @@ const settings = {
                     settings.menu();
                     break;
                 case 'Chinese':
-                    config.set("displaylang", "zh");displaylang = "zh";i.setLocale(displaylang);
+                    config.set("displaylang", "tw");displaylang = "tw";i.setLocale(displaylang);
                     settings.menu();
                     break;
                 case `${i.__('Back')}`:

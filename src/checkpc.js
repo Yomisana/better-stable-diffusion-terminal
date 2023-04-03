@@ -44,7 +44,13 @@ const $ = {
                 console.log(`${i.__('Done!')}`);
                 console.log(color("yellow"),`[Tips] PC Equipment Can see here to settings your pc https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md`);
                 // open('open', ['https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md']);
-                exec('start https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md');
+                if(displaylang == "tw"){
+                    exec(`start https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.${displaylang}.md`);
+                }else{
+                    exec(`start https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md`);
+                }
+                
+                // exec('start https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md');
                 pressAnyKey(`${i.__('pressAnyKey')}`, {
                     ctrlC: "reject"
                 }).then(async () => {
