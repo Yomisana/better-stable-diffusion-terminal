@@ -15,7 +15,7 @@
 ## 安裝 Stable Diffusion
 
 現在僅支援 Windows  
-🚧未來會支援 macOS, Linux🚧
+🚧可能未來會支援 macOS, Linux🚧
 [點我下載軟體也可以!](https://github.com/Yomisana/stable-diffusion-installer/releases/latest/download/Stable-Diffusion-Installer.exe)
 
 ## 特色
