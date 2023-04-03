@@ -4,11 +4,13 @@ cmd.clear();cmd.title("Better Stable Diffusion");
 
 // app settings
 config.load()
-    .then(debug())
+    // .then(debug())
     .then(init());
 
 function debug(){
     // console.log("I am First");
+    // const { exec } = require('child_process');
+    // exec('start https://www.example.com');
 }
 
 async function init(){

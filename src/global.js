@@ -7,6 +7,8 @@ global.inquirer = require('inquirer');
 global.os = require('os');
 global.osinfo = require('systeminformation');
 global.pressAnyKey = require('press-any-key');
+global.exec = require('child_process').exec;
+
 // Main Module
 global.i = require('./lang/i18n.js');global.displaylang = null;
 global.config = require('./config');
