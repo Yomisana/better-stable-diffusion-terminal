@@ -42,7 +42,7 @@ const $ = {
             message: `${i.__('Please choose what you wanna do?')}:`,
             choices: [
                 `X${i.__('Install Model URL')}`,
-                `X${i.__('Auto Install Stable Diffusion')}`,
+                `${i.__('Auto Install Stable Diffusion')}`,
                 `${i.__('Check System what settings recommended of My PC')}`,
                 `${i.__('Settings')}`,
                 `${i.__('Exit')}`
@@ -52,10 +52,10 @@ const $ = {
             firstmenu = false;
             switch (answers.choice) {
                 case `${i.__('Auto Install Stable Diffusion')}`:
-                    $.autoinstall();
+                    install.sd_core();
                     break;
                 case `${i.__('Install Model URL')}`:
-                    $.models_menu();
+                    // $.models_menu();
                     break;
                 case `${i.__('Check System what settings recommended of My PC')}`:
                     onlycheck = true;
@@ -71,6 +71,19 @@ const $ = {
                     break;
             }
         });
+    },
+    input: async function(message, value){
+        let answers = await inquirer.prompt([
+            {
+              name: 'value',
+              message: `${message}:`
+            }
+        ]);
+        if (!answers.value) {
+            return value;
+        }
+
+        return answers.value;
     }
 }
 
@@ -131,7 +144,7 @@ const settings = {
                     break;
             }
         });
-    },
+    }
 }
 
 module.exports = $;

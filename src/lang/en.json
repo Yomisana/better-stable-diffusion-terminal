@@ -27,7 +27,8 @@
     "Please choose your laungue": "Please choose your laungue",
     "Install Model URL": "Install Model URL",
     "Download Model": "Download Model",
-    "Past url here": "Past url here(supoort civitai)",
+    "Past url here": "Past url here",
+    "Support civitai": "supoort civitai",
     "Please choose your version": "Please choose your version",
     "Prepare to download": "Prepare Download",
     "downloading": "Downloading.....",
@@ -36,5 +37,7 @@
     "pressAnyKey": "Press any key to continue",
     "pressAnyKey cancel": "Ctrl + C",
     "scan hardware info...": "scan hardware info...",
+    "Default Download Folder": "Default Download Folder",
+    "Invalid URL. Please enter a valid URL.": "Invalid URL. Please enter a valid URL.",
     "default": "default"
 }

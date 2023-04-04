@@ -27,7 +27,8 @@
     "Please choose your laungue": "請選擇你要顯示的語言",
     "Install Model URL": "安裝模型網址",
     "Download Model": "下載模型",
-    "Past url here": "在這裡貼上網址(支援civitai)",
+    "Past url here": "在這裡貼上網址",
+    "Support civitai": "支援civitai",
     "Please choose your version": "請選擇你的版本",
     "Prepare to download": "準備下載",
     "downloading": "下載....",
@@ -35,5 +36,8 @@
     "Done!": "完成!",
     "pressAnyKey": "按下任意按鍵繼續",
     "pressAnyKey cancel": "Ctrl + C",
+    "scan hardware info...": "掃描硬體資訊中...",
+    "Default Download Folder": "預設下載資料夾路徑",
+    "Invalid URL. Please enter a valid URL.": "無效的網址. 請輸入有效的網址.",
     "default": "default"
 }
