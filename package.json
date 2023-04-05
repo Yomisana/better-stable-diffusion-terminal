@@ -1,6 +1,6 @@
 {
   "name": "better-stable-diffusion",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "This is better stable diffusion for windows",
   "main": "index.js",
   "scripts": {

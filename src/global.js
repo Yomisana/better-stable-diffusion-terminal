@@ -1,5 +1,3 @@
-const { equal } = require('assert');
-
 // 3rd Module
 global.figlet = require('figlet');
 global.fs = require('fs-extra');
@@ -21,8 +19,17 @@ global.config = require('./config');
 global.menu = require('./menu');
 global.check = require('./checkpc');
 global.install = require('./install');
+global.updater = require('./updater');
+global.app = require('../package.json');
 // Main
+global.repoUrl = "https://api.github.com/repos/yomisana/better-stable-diffusion/releases/latest";
+global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/releases/latest/download/Better-Stable-Diffusion.exe";
+global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
 global.app_name = "Better Stable Diffusion"
+global.app_version = {
+    current: null,
+    latest: null,
+}
 global.app_location = {
     folder: {
         settings: `${process.cwd()}\\config`,
@@ -141,11 +148,17 @@ global.downloadinfo = {
     downloadedSize: 0 // 目標已下載檔案大小 (KB)
 }
 
-global.downloadData = function(name, url, path) {
+global.downloadData = function(url, folerpath) {
     return new Promise(( resolve, reject ) => {
+        let name = path.basename(url);
+        if (!fs.existsSync(folerpath)) {
+            fs.mkdirSync(folerpath);
+            console.log(`Folder ${folerpath} has been created.`);
+        }
+        console.log(`Start Download ${name} | url: ${url}`);
         // request | 請求
         const req = request(url);
-        const stream = req.pipe(fs.createWriteStream(path+"\\"+name));
+        const stream = req.pipe(fs.createWriteStream(folerpath+"\\"+name));
         downloadinfo.targetSize = 0
         downloadinfo.downloadedSize = 0
         // progressBar | 進度條
@@ -164,7 +177,7 @@ global.downloadData = function(name, url, path) {
             bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
             bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
             if (bar.complete) {
-                console.log(`${i.__('complete!')} ${path+"\\"+name}`);
+                console.log(`${i.__('complete!')} ${folerpath+"\\"+name}`);
             }
         });
   
@@ -173,7 +186,7 @@ global.downloadData = function(name, url, path) {
         });
   
         stream.on('error',function(err){
-            reject(`stream error: ${err} in url ${url} at file ${path}`);
+            reject(`stream error: ${err} in url ${url} at file ${folerpath}`);
         });
   
         function convertSize(size) {

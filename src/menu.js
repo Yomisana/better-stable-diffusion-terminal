@@ -35,6 +35,7 @@ const $ = {
     main: async function(){
         cmd.clear(); await ascii_art("yellow", app_name);
         // console.log("At menu");
+        console.log(color("blue"),`App Version: ${app_version.current}`);
         inquirer.prompt([
         {
             type: 'list',
