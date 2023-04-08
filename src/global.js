@@ -50,6 +50,9 @@ global.d_value = {
     sdw: {
         url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
     },
+    python: {
+        [3_10_10]: "https://www.python.org/ftp/python/3.10.10/python-3.10.10-embed-amd64.zip"
+    },
     dev_temp: `${process.cwd()}\\better-stable-diffusion\\temp`,
     dev_bin: `${process.cwd()}\\better-stable-diffusion\\bin`,
 }
@@ -161,25 +164,25 @@ global.downloadData = function(url, folderpath) {
   
       try {
         await fs.promises.mkdir(folderpath, { recursive: true });
-        console.log(`Created directory: ${folderpath}`);
+        console.log(`${i.__('Created directory')}: ${folderpath}`);
   
         if (fs.existsSync(filepath)) {
           // if file exists, check if hash matches
           const urlHash = await getHashFromUrl(url);
           const fileHash = getHashFromFile(filepath);
-          console.log(`${urlHash}`);
-          console.log(`${fileHash}`);
+        //   console.log(`url hash: ${urlHash}`);
+        //   console.log(`file hash: ${fileHash}`);
   
           if (urlHash === fileHash) {
-            console.log(`${name} already exists and hash matches.`);
+            console.log(`${name} ${i.__('already exists and hash matches.')}`);
             resolve('ok');
             return;
           }
   
-          console.log(`${name} already exists but hash does not match, redownloading...`);
+          console.log(`${name} ${i.__('already exists but hash does not match, redownloading...')}`);
         }
   
-        console.log(`Start Download ${name} | url: ${url}`);
+        console.log(`${i.__('Start Download')} ${name} | url: ${url}`);
         const req = request(url);
         const stream = req.pipe(fs.createWriteStream(filepath));
   
@@ -244,175 +247,34 @@ global.downloadData = function(url, folderpath) {
       }
     });
 }
-  
-
-// downloadData v2(Check Hash)
-// global.downloadData = function(url, folerpath) {
-//     return new Promise(async ( resolve, reject ) => {
-//         let name = path.basename(url);
-//         const filepath = folerpath + "\\" + name;
-
-//         mkdirp(folerpath, function (err) {
-//             return new Promise((resolve, reject)=>{
-//                 if (err) {
-//                     console.error(err);
-//                     reject();
-//                 } else {
-//                     console.log(`Created directory: ${folerpath}`);
-//                     resolve();
-//                 }
-//             });
-//         });
-
-//         if (fs.existsSync(filepath)) {
-//             // if file exists, check if hash matches
-//             // const urlHash = getHashFromurl(url);
-//             const urlHash = await getHashFromUrl(url)
-//             const FileHash = getHashFromFile(filepath);
-//             console.log(`${urlHash}`)
-//             console.log(`${FileHash}`)
-//             if (urlHash === FileHash) {
-//                 console.log(`${name} already exists and hash matches.`);
-//                 resolve('ok');
-//                 return;
-//             }
-//             console.log(`${name} already exists but hash does not match, redownloading...`);
-//         }
-
-//         console.log(`Start Download ${name} | url: ${url}`);
-//         const req = request(url);
-//         const stream = req.pipe(fs.createWriteStream(filepath));
-
-//         // progressBar
-//         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
-//             total: 10
-//         }); 
-  
-//         req.on('response',function(data){
-//             downloadinfo.targetSize = parseInt(data.headers['content-length']);
-//         });
-  
-//         req.on('data', function (chunk) {
-//             downloadinfo.downloadedSize += chunk.length; 
-//             bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
-//             bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
-//             if (bar.complete) {
-//                 console.log(`${i.__('complete!')} ${filepath}`);
-//             }
-//         });
-  
-//         stream.on('finish',function(){
-//             resolve('ok');
-//         });
-  
-//         stream.on('error',function(err){
-//             reject(`stream error: ${err} in url ${url} at file ${filepath}`);
-//         });
-  
-//         function convertSize(size) {
-//             const units = ['B', 'KB', 'MB', 'GB'];
-//             let unitIndex = 0;
-//             while(size >= 1024 && unitIndex < units.length - 1) {
-//                 size /= 1024;
-//                 unitIndex++;
-//             }
-//             return `${size.toFixed(2)} ${units[unitIndex]}`;
-//         }
-
-//         function getHashFromUrl(url) {
-//             return new Promise((resolve, reject) => {
-//               const hash = crypto.createHash('sha256');
-          
-//               request.get(url)
-//                 .on('error', err => reject(err))
-//                 .on('data', chunk => hash.update(chunk))
-//                 .on('end', () => resolve(hash.digest('hex')));
-//             });
-//         }
-
-//         function getHashFromFile(filepath) {
-//             // calculate actual hash from file
-//             const data = fs.readFileSync(filepath);
-//             const hash = crypto.createHash('sha256');
-//             hash.update(data);
-//             return hash.digest('hex');
-//         }
-//     })
-// }
-
-
-// downloadData v1
-// global.downloadData = function(url, folerpath) {
-//     return new Promise(( resolve, reject ) => {
-//         let name = path.basename(url);
-//         if (!fs.existsSync(folerpath)) {
-//             fs.mkdirSync(folerpath);
-//             console.log(`Folder ${folerpath} has been created.`);
-//         }
-//         console.log(`Start Download ${name} | url: ${url}`);
-//         // request | 請求
-//         const req = request(url);
-//         const stream = req.pipe(fs.createWriteStream(folerpath+"\\"+name));
-//         downloadinfo.targetSize = 0
-//         downloadinfo.downloadedSize = 0
-//         // progressBar | 進度條
-//         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
-//             total: 10
-//         }); 
-  
-//         // request 初次回傳後，提取目標檔案實際大小
-//         req.on('response',function(data){
-//             downloadinfo.targetSize = parseInt(data.headers['content-length']);
-//         });
-  
-//         // request 下載期間顯示
-//         req.on('data', function (chunk) {
-//             downloadinfo.downloadedSize += chunk.length; 
-//             bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
-//             bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
-//             if (bar.complete) {
-//                 console.log(`${i.__('complete!')} ${folerpath+"\\"+name}`);
-//             }
-//         });
-  
-//         stream.on('finish',function(){
-//             resolve('ok');
-//         });
-  
-//         stream.on('error',function(err){
-//             reject(`stream error: ${err} in url ${url} at file ${folerpath}`);
-//         });
-  
-//         function convertSize(size) {
-//             const units = ['B', 'KB', 'MB', 'GB'];
-//             let unitIndex = 0;
-//             while(size >= 1024 && unitIndex < units.length - 1) {
-//                 size /= 1024;
-//                 unitIndex++;
-//             }
-//             return `${size.toFixed(2)} ${units[unitIndex]}`;
-//         }
-//     })
-// }
 
 // 解壓縮
 global.extract = async function(filename, target_path, output_path, value){
     try {
-        console.log(color("yellow"), `開始解壓縮 ${filename}...`);
-        console.log(color("red"), `Target: ${target_path}\\${filename}`)
-        console.log(color("red"), `Output: ${output_path}`)
+        console.log(color("yellow"), `${i.__('Start Extract')} ${filename}...`);
+        console.log(color("red"), `${i.__('Target')}: ${target_path}\\${filename}`)
+        console.log(color("red"), `${i.__('Outpput')}: ${output_path}`)
         await extract_zip(`${target_path}\\${filename}`, { dir: `${output_path}` })
         if(value == "sd"){
             // console.log("Re-name - 修正資料夾名稱");
             fs.copySync(`${output_path}\\stable-diffusion-webui-master`, `${output_path}\\stable-diffusion-webui`, { overwrite: true});
             fs.rm(`${output_path}\\stable-diffusion-webui-master`, {recursive:true});
-            console.log(color("blue"), `解壓縮完畢! ${filename}...`);
+            console.log(color("blue"), `${i.__('Done Extract')}! ${filename}...`);
+            // pressAnyKey(`${i.__('pressAnyKey')}`, {
+            //     ctrlC: "reject"
+            // }).then(async () => {
+            //     cmd.clear(); await ascii_art("red", app_name);
+            // }).catch(() => {
+            //     console.log('You pressed CTRL+C');
+            // })
+        }else if(value == "py"){
+            console.log(color("blue"), `${i.__('Done Extract')}! ${filename}...`);
             pressAnyKey(`${i.__('pressAnyKey')}`, {
                 ctrlC: "reject"
             }).then(async () => {
-                cmd.clear(); await ascii_art("red", app_name);menu.main();
+                cmd.clear(); await ascii_art("red", app_name);        menu.main();
             }).catch(() => {
-                console.log('You pressed CTRL+C');  menu.main();
+                console.log('You pressed CTRL+C');        menu.main();
             })
         }else{
             console.log("None - extract command");

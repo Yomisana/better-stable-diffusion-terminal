@@ -1,8 +1,8 @@
 const $ = {
     checkForUpdates: function(){
         app_version.current = app.version
-        console.log(`檢查更新中...`);
-        console.log(`當前版本: ${app_version.current}`);
+        console.log(`${i.__('Check Update')}`);
+        console.log(`${i.__('Current Version')}: ${app_version.current}`);
         const headers = {
             'User-Agent': 'Better-Stable-Diffusion/v1'
         };
@@ -14,7 +14,7 @@ const $ = {
                 let data = JSON.parse(body);
                 let latestVersion = data.tag_name;
                 app_version.latest = latestVersion;
-                console.log('最新版本:', latestVersion);
+                console.log(`${i.__('Latest Version')}`, latestVersion);
                 $.update($.compareVersions(app_version.current,app_version.latest));
             }
         });
