@@ -40,6 +40,8 @@ global.app_location = {
     },
 }
 
+global.app_dev = false;
+
 
 global.d_value = {
     // Stable Diffusion Webui

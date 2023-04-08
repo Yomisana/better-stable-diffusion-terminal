@@ -14,8 +14,7 @@
 
 ## Install Stable Diffusion
 
-Now only support Windows  
-🚧Maybe will future support macOS, Linux🚧  
+only support Windows  
 
 [Click me to download the app!](https://github.com/Yomisana/better-stable-diffusion/releases/latest/download/Better-Stable-Diffusion.exe)
 

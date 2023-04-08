@@ -4,11 +4,18 @@ cmd.clear();cmd.title("Better Stable Diffusion");
 app_version.current = app.version
 // app settings
 config.load()
-    // .then(debug())
+    .then(debug())
     .then(updater.checkForUpdates())
     // .then(init());
 
 async function debug(){
+    process.argv.forEach(function (val, index, array) {
+        // console.log("參數" ,index + ': ' + val);
+        if (val.includes('--dev')) {
+            app_dev = true;
+            console.log("In dev")
+        }
+    });
     // let url = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
     // await downloadData(`${url}`, path.join(`${d_value.temp}`));
     // console.log("I am First");
