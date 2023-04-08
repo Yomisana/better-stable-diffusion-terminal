@@ -49,7 +49,9 @@ global.d_value = {
     bin: `${process.cwd()}\\bin`,
     sdw: {
         url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
-    }
+    },
+    dev_temp: `${process.cwd()}\\better-stable-diffusion\\temp`,
+    dev_bin: `${process.cwd()}\\better-stable-diffusion\\bin`,
 }
 // global.download = {
 //     default_folder: `${process.cwd()}\\temp`,
@@ -151,92 +153,192 @@ global.downloadinfo = {
     downloadedSize: 0 // 目標已下載檔案大小 (KB)
 }
 
-// downloadData v2(Check Hash)
-global.downloadData = function(url, folerpath) {
-    return new Promise(async ( resolve, reject ) => {
-        let name = path.basename(url);
-        const filepath = folerpath + "\\" + name;
-
-        if (!fs.existsSync(folerpath)) {
-            fs.mkdirSync(folerpath);
-            console.log(`Folder ${folerpath} has been created.`);
-        }
-
+// downloadData v3(Check Hash , --dev folder)
+global.downloadData = function(url, folderpath) {
+    return new Promise(async (resolve, reject) => {
+      let name = path.basename(url);
+      const filepath = path.join(folderpath, name);
+  
+      try {
+        await fs.promises.mkdir(folderpath, { recursive: true });
+        console.log(`Created directory: ${folderpath}`);
+  
         if (fs.existsSync(filepath)) {
-            // if file exists, check if hash matches
-            // const urlHash = getHashFromurl(url);
-            const urlHash = await getHashFromUrl(url)
-            const FileHash = getHashFromFile(filepath);
-            console.log(`${urlHash}`)
-            console.log(`${FileHash}`)
-            if (urlHash === FileHash) {
-                console.log(`${name} already exists and hash matches.`);
-                resolve('ok');
-                return;
-            }
-            console.log(`${name} already exists but hash does not match, redownloading...`);
+          // if file exists, check if hash matches
+          const urlHash = await getHashFromUrl(url);
+          const fileHash = getHashFromFile(filepath);
+          console.log(`${urlHash}`);
+          console.log(`${fileHash}`);
+  
+          if (urlHash === fileHash) {
+            console.log(`${name} already exists and hash matches.`);
+            resolve('ok');
+            return;
+          }
+  
+          console.log(`${name} already exists but hash does not match, redownloading...`);
         }
-
+  
         console.log(`Start Download ${name} | url: ${url}`);
         const req = request(url);
         const stream = req.pipe(fs.createWriteStream(filepath));
-
+  
         // progressBar
         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
-            total: 10
+          total: 10
         }); 
-  
+    
         req.on('response',function(data){
-            downloadinfo.targetSize = parseInt(data.headers['content-length']);
+          downloadinfo.targetSize = parseInt(data.headers['content-length']);
         });
-  
+    
         req.on('data', function (chunk) {
-            downloadinfo.downloadedSize += chunk.length; 
-            bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
-            bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
-            if (bar.complete) {
-                console.log(`${i.__('complete!')} ${filepath}`);
-            }
+          downloadinfo.downloadedSize += chunk.length; 
+          bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
+          bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
+          if (bar.complete) {
+            console.log(`${i.__('complete!')} ${filepath}`);
+          }
         });
-  
+    
         stream.on('finish',function(){
-            resolve('ok');
+          resolve('ok');
         });
-  
+    
         stream.on('error',function(err){
-            reject(`stream error: ${err} in url ${url} at file ${filepath}`);
+          reject(`stream error: ${err} in url ${url} at file ${filepath}`);
         });
-  
+    
         function convertSize(size) {
-            const units = ['B', 'KB', 'MB', 'GB'];
-            let unitIndex = 0;
-            while(size >= 1024 && unitIndex < units.length - 1) {
-                size /= 1024;
-                unitIndex++;
-            }
-            return `${size.toFixed(2)} ${units[unitIndex]}`;
+          const units = ['B', 'KB', 'MB', 'GB'];
+          let unitIndex = 0;
+          while(size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+          }
+          return `${size.toFixed(2)} ${units[unitIndex]}`;
         }
-
-        function getHashFromUrl(url) {
-            return new Promise((resolve, reject) => {
-              const hash = crypto.createHash('sha256');
-          
-              request.get(url)
-                .on('error', err => reject(err))
-                .on('data', chunk => hash.update(chunk))
-                .on('end', () => resolve(hash.digest('hex')));
-            });
+  
+        async function getHashFromUrl(url) {
+          const hash = crypto.createHash('sha256');
+  
+          return new Promise((resolve, reject) => {
+            request.get(url)
+              .on('error', err => reject(err))
+              .on('data', chunk => hash.update(chunk))
+              .on('end', () => resolve(hash.digest('hex')));
+          });
         }
-
+  
         function getHashFromFile(filepath) {
-            // calculate actual hash from file
-            const data = fs.readFileSync(filepath);
-            const hash = crypto.createHash('sha256');
-            hash.update(data);
-            return hash.digest('hex');
+          // calculate actual hash from file
+          const data = fs.readFileSync(filepath);
+          const hash = crypto.createHash('sha256');
+          hash.update(data);
+          return hash.digest('hex');
         }
-    })
+  
+      } catch (err) {
+        console.error(err);
+        reject();
+      }
+    });
 }
+  
+
+// downloadData v2(Check Hash)
+// global.downloadData = function(url, folerpath) {
+//     return new Promise(async ( resolve, reject ) => {
+//         let name = path.basename(url);
+//         const filepath = folerpath + "\\" + name;
+
+//         mkdirp(folerpath, function (err) {
+//             return new Promise((resolve, reject)=>{
+//                 if (err) {
+//                     console.error(err);
+//                     reject();
+//                 } else {
+//                     console.log(`Created directory: ${folerpath}`);
+//                     resolve();
+//                 }
+//             });
+//         });
+
+//         if (fs.existsSync(filepath)) {
+//             // if file exists, check if hash matches
+//             // const urlHash = getHashFromurl(url);
+//             const urlHash = await getHashFromUrl(url)
+//             const FileHash = getHashFromFile(filepath);
+//             console.log(`${urlHash}`)
+//             console.log(`${FileHash}`)
+//             if (urlHash === FileHash) {
+//                 console.log(`${name} already exists and hash matches.`);
+//                 resolve('ok');
+//                 return;
+//             }
+//             console.log(`${name} already exists but hash does not match, redownloading...`);
+//         }
+
+//         console.log(`Start Download ${name} | url: ${url}`);
+//         const req = request(url);
+//         const stream = req.pipe(fs.createWriteStream(filepath));
+
+//         // progressBar
+//         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
+//             total: 10
+//         }); 
+  
+//         req.on('response',function(data){
+//             downloadinfo.targetSize = parseInt(data.headers['content-length']);
+//         });
+  
+//         req.on('data', function (chunk) {
+//             downloadinfo.downloadedSize += chunk.length; 
+//             bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
+//             bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
+//             if (bar.complete) {
+//                 console.log(`${i.__('complete!')} ${filepath}`);
+//             }
+//         });
+  
+//         stream.on('finish',function(){
+//             resolve('ok');
+//         });
+  
+//         stream.on('error',function(err){
+//             reject(`stream error: ${err} in url ${url} at file ${filepath}`);
+//         });
+  
+//         function convertSize(size) {
+//             const units = ['B', 'KB', 'MB', 'GB'];
+//             let unitIndex = 0;
+//             while(size >= 1024 && unitIndex < units.length - 1) {
+//                 size /= 1024;
+//                 unitIndex++;
+//             }
+//             return `${size.toFixed(2)} ${units[unitIndex]}`;
+//         }
+
+//         function getHashFromUrl(url) {
+//             return new Promise((resolve, reject) => {
+//               const hash = crypto.createHash('sha256');
+          
+//               request.get(url)
+//                 .on('error', err => reject(err))
+//                 .on('data', chunk => hash.update(chunk))
+//                 .on('end', () => resolve(hash.digest('hex')));
+//             });
+//         }
+
+//         function getHashFromFile(filepath) {
+//             // calculate actual hash from file
+//             const data = fs.readFileSync(filepath);
+//             const hash = crypto.createHash('sha256');
+//             hash.update(data);
+//             return hash.digest('hex');
+//         }
+//     })
+// }
 
 
 // downloadData v1

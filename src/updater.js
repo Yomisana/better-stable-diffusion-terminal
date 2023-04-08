@@ -35,8 +35,11 @@ const $ = {
       if (result < 0) {
         console.log(`New version ${app_version.latest} is available!`);
         try {
-          await downloadData(`${repoUrl_update_file}`, path.join(`${d_value.temp}`));
-          await downloadData(`${repoUrl_file}`, path.join(`${d_value.temp}`));
+          const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+          await Promise.all([
+            downloadData(`${repoUrl_update_file}`, path.join(targetPath)),
+            downloadData(`${repoUrl_file}`, path.join(targetPath))
+          ]);
           $.call_update();
         } catch (error) {
           console.error(error);
@@ -53,12 +56,11 @@ const $ = {
     },
     call_update: function(){
       const { spawn } = require('child_process');
-
-      const child = spawn(`${d_value.temp}\\update.bat`, [], {
+      let path = app_dev ? d_value.dev_temp : d_value.temp;
+      const child = spawn(`${path}\\update.bat`, [], {
         detached: true,
         stdio: 'ignore'
       });
-
       child.unref();
       close();
     }
