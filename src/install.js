@@ -15,10 +15,11 @@ const $ = {
         }else{
             console.log(color("yellow"),`${i.__('Start Download Stable Diffusion...')}`);
             console.log(color("blue"),`${i.__('Default Download Folder')}: ${d_value.temp}`);
+            let filename = path.basename(url);
             if(url == d_value.sdw.url){
                 await downloadData(`${url}`, path.join(`${d_value.temp}`));
-                // // 解壓縮
-                extract(`${filename}`, `${d_value.temp}`, `${d_value.bin}`, "sd");    
+                // 解壓縮
+                extract(`${filename}`, `${d_value.temp}`, `${d_value.bin}`, "sd");
             }else {
                 console.log(filename); // remote.bat
                 await downloadData(`${url}`, path.join(`${d_value.temp}`));

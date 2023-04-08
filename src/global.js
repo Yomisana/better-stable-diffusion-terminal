@@ -9,6 +9,7 @@ global.osinfo = require('systeminformation');
 global.pressAnyKey = require('press-any-key');
 global.exec = require('child_process').exec;
 global.request = require('request');
+global.crypto = require('crypto');
 global.process = require('process');
 global.extract_zip = require('extract-zip');
 global.ProgressBar = require('progress');
@@ -148,36 +149,51 @@ global.downloadinfo = {
     downloadedSize: 0 // 目標已下載檔案大小 (KB)
 }
 
+// downloadData v2(Check Hash)
 global.downloadData = function(url, folerpath) {
-    return new Promise(( resolve, reject ) => {
+    return new Promise(async ( resolve, reject ) => {
         let name = path.basename(url);
+        const filepath = folerpath + "\\" + name;
+
         if (!fs.existsSync(folerpath)) {
             fs.mkdirSync(folerpath);
             console.log(`Folder ${folerpath} has been created.`);
         }
+
+        if (fs.existsSync(filepath)) {
+            // if file exists, check if hash matches
+            // const urlHash = getHashFromurl(url);
+            const urlHash = await getHashFromUrl(url)
+            const FileHash = getHashFromFile(filepath);
+            console.log(`${urlHash}`)
+            console.log(`${FileHash}`)
+            if (urlHash === FileHash) {
+                console.log(`${name} already exists and hash matches.`);
+                resolve('ok');
+                return;
+            }
+            console.log(`${name} already exists but hash does not match, redownloading...`);
+        }
+
         console.log(`Start Download ${name} | url: ${url}`);
-        // request | 請求
         const req = request(url);
-        const stream = req.pipe(fs.createWriteStream(folerpath+"\\"+name));
-        downloadinfo.targetSize = 0
-        downloadinfo.downloadedSize = 0
-        // progressBar | 進度條
+        const stream = req.pipe(fs.createWriteStream(filepath));
+
+        // progressBar
         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
             total: 10
         }); 
   
-        // request 初次回傳後，提取目標檔案實際大小
         req.on('response',function(data){
             downloadinfo.targetSize = parseInt(data.headers['content-length']);
         });
   
-        // request 下載期間顯示
         req.on('data', function (chunk) {
             downloadinfo.downloadedSize += chunk.length; 
             bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
             bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
             if (bar.complete) {
-                console.log(`${i.__('complete!')} ${folerpath+"\\"+name}`);
+                console.log(`${i.__('complete!')} ${filepath}`);
             }
         });
   
@@ -186,7 +202,7 @@ global.downloadData = function(url, folerpath) {
         });
   
         stream.on('error',function(err){
-            reject(`stream error: ${err} in url ${url} at file ${folerpath}`);
+            reject(`stream error: ${err} in url ${url} at file ${filepath}`);
         });
   
         function convertSize(size) {
@@ -198,8 +214,82 @@ global.downloadData = function(url, folerpath) {
             }
             return `${size.toFixed(2)} ${units[unitIndex]}`;
         }
+
+        function getHashFromUrl(url) {
+            return new Promise((resolve, reject) => {
+              const hash = crypto.createHash('sha256');
+          
+              request.get(url)
+                .on('error', err => reject(err))
+                .on('data', chunk => hash.update(chunk))
+                .on('end', () => resolve(hash.digest('hex')));
+            });
+        }
+
+        function getHashFromFile(filepath) {
+            // calculate actual hash from file
+            const data = fs.readFileSync(filepath);
+            const hash = crypto.createHash('sha256');
+            hash.update(data);
+            return hash.digest('hex');
+        }
     })
 }
+
+
+// downloadData v1
+// global.downloadData = function(url, folerpath) {
+//     return new Promise(( resolve, reject ) => {
+//         let name = path.basename(url);
+//         if (!fs.existsSync(folerpath)) {
+//             fs.mkdirSync(folerpath);
+//             console.log(`Folder ${folerpath} has been created.`);
+//         }
+//         console.log(`Start Download ${name} | url: ${url}`);
+//         // request | 請求
+//         const req = request(url);
+//         const stream = req.pipe(fs.createWriteStream(folerpath+"\\"+name));
+//         downloadinfo.targetSize = 0
+//         downloadinfo.downloadedSize = 0
+//         // progressBar | 進度條
+//         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
+//             total: 10
+//         }); 
+  
+//         // request 初次回傳後，提取目標檔案實際大小
+//         req.on('response',function(data){
+//             downloadinfo.targetSize = parseInt(data.headers['content-length']);
+//         });
+  
+//         // request 下載期間顯示
+//         req.on('data', function (chunk) {
+//             downloadinfo.downloadedSize += chunk.length; 
+//             bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
+//             bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
+//             if (bar.complete) {
+//                 console.log(`${i.__('complete!')} ${folerpath+"\\"+name}`);
+//             }
+//         });
+  
+//         stream.on('finish',function(){
+//             resolve('ok');
+//         });
+  
+//         stream.on('error',function(err){
+//             reject(`stream error: ${err} in url ${url} at file ${folerpath}`);
+//         });
+  
+//         function convertSize(size) {
+//             const units = ['B', 'KB', 'MB', 'GB'];
+//             let unitIndex = 0;
+//             while(size >= 1024 && unitIndex < units.length - 1) {
+//                 size /= 1024;
+//                 unitIndex++;
+//             }
+//             return `${size.toFixed(2)} ${units[unitIndex]}`;
+//         }
+//     })
+// }
 
 // 解壓縮
 global.extract = async function(filename, target_path, output_path, value){

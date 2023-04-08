@@ -8,7 +8,9 @@ config.load()
     .then(updater.checkForUpdates())
     // .then(init());
 
-function debug(){
+async function debug(){
+    // let url = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
+    // await downloadData(`${url}`, path.join(`${d_value.temp}`));
     // console.log("I am First");
     // const { exec } = require('child_process');
     // exec('start https://www.example.com');
