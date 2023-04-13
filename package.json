@@ -1,6 +1,6 @@
 {
   "name": "better-stable-diffusion",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "This is better stable diffusion for windows",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "press-any-key": "^0.1.1",
     "progress": "^2.0.3",
     "request": "^2.88.2",
+    "semver": "^7.4.0",
     "systeminformation": "^5.17.12",
     "validator": "^13.9.0"
   }

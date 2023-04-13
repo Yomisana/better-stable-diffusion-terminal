@@ -14,6 +14,7 @@ global.process = require('process');
 global.extract_zip = require('extract-zip');
 global.ProgressBar = require('progress');
 global.validator = require('validator');
+global.semver = require('semver');
 // Main Module
 global.i = require('./lang/i18n.js');global.displaylang = null;
 global.config = require('./config');
@@ -49,9 +50,6 @@ global.d_value = {
     bin: `${process.cwd()}\\bin`,
     sdw: {
         url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
-    },
-    python: {
-        [3_10_10]: "https://www.python.org/ftp/python/3.10.10/python-3.10.10-embed-amd64.zip"
     },
     dev_temp: `${process.cwd()}\\better-stable-diffusion\\temp`,
     dev_bin: `${process.cwd()}\\better-stable-diffusion\\bin`,
@@ -269,13 +267,6 @@ global.extract = async function(filename, target_path, output_path, value){
             // })
         }else if(value == "py"){
             console.log(color("blue"), `${i.__('Done Extract')}! ${filename}...`);
-            pressAnyKey(`${i.__('pressAnyKey')}`, {
-                ctrlC: "reject"
-            }).then(async () => {
-                cmd.clear(); await ascii_art("red", app_name);        menu.main();
-            }).catch(() => {
-                console.log('You pressed CTRL+C');        menu.main();
-            })
         }else{
             console.log("None - extract command");
             menu.main();

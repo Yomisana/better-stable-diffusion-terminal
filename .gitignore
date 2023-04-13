@@ -6,6 +6,7 @@ src/config
 bin
 temp
 dist
+better-stable-diffusion
 dist/Stable-Diffusion-Installer.exe
 installer/
 config/config.json
