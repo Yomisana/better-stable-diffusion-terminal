@@ -5,6 +5,7 @@ const $ = {
         // https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip
         
         // 選擇下載位置(預設: AUTOMATIC1111/stable-diffusion-webui):
+        cmd.title(app_title, `Ready Install Stable Diffusion`);
         let sdurl = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
         console.log(sdurl);
 
@@ -13,6 +14,7 @@ const $ = {
             console.log(color("red"),`${i.__('Invalid URL. Please enter a valid URL.')}`);
             $.sd_core();
         }else{
+            cmd.title(app_title, `Download & Install Stable Diffusion`);
             const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
             const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
             console.log(color("yellow"),`${i.__('Start Download Stable Diffusion...')}`);
@@ -25,6 +27,7 @@ const $ = {
         }
     },
     python: async function(){
+        cmd.title(app_title, `Ready Install Python`);
         let default_pyurl = "https://www.python.org/ftp/python/version/python-version-embed-amd64.zip"
         let default_pyver = "3.10.6"
         console.log(color("yellow"),`Only can install 3.10.6 ~ 3.10.11 version of pyhton`);
@@ -44,6 +47,7 @@ const $ = {
                 console.log(color("red"),`${i.__('Invalid URL. Please enter a valid URL.')}`);
                 $.python();
             }else{
+                cmd.title(app_title, `Download & Install Python`);
                 const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
                 const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
                 console.log(color("yellow"),`${i.__('Start Download Python...')}`);
@@ -64,6 +68,7 @@ const $ = {
     },
     pip: async function(targetBinPath){
         try {
+            cmd.title(app_title, `Python => pip Downloading...`);
             console.log(`Install pip`)
             await fs.promises.mkdir(`${targetBinPath}\\python\\DLLs`, { recursive: true });
             const data = fs.readFileSync(`${targetBinPath}\\python\\python310._pth`, 'utf8');
@@ -76,6 +81,7 @@ const $ = {
             await downloadData(pip_url,`${targetBinPath}\\python`);
             // python get-pip.py
             // python -m pip install --upgrade pip
+            cmd.title(app_title, `Python => pip Installing...`);
             const { execSync } = require('child_process');
             // 執行 get-pip.py
             console.log(color("blue"),`python pip install...`)

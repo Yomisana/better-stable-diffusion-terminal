@@ -1,6 +1,7 @@
 const $ = {
     checkForUpdates: function(){
         app_version.current = app.version
+        cmd.title(app_title, `${i.__('Check Update')}`);
         console.log(`${i.__('Check Update')}`);
         console.log(`${i.__('Current Version')}: ${app_version.current}`);
         const headers = {
@@ -33,6 +34,7 @@ const $ = {
     },
     update: async function(result){
       if (result < 0) {
+        cmd.title(app_title, `updating...`);
         console.log(`New version ${app_version.latest} is available!`);
         try {
           const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
@@ -45,6 +47,7 @@ const $ = {
           console.error(error);
         }
       }else {
+        cmd.title(app_title, `latest version`);
         if (result === 0) {
           console.log('You are using the latest version.');
         }else{

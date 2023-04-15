@@ -1,7 +1,9 @@
 const $ = {
     pc: function(){
         return new Promise(async(resolve) => {
-            console.log(color("red"), "[Tips] 此功能僅掃描硬體設備，並且在掃描完畢後可以點開此連結查看你的硬體設備是否可以支撐? https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md")
+            cmd.title(app_title, `Check PC hardware INFO`);
+            console.log(color("red"), "[Tips] 此功能僅掃描硬體設備，並且在掃描完畢後可以點開此連結查看你的硬體設備是否可以支撐?")
+            console.log(color("red"), "https://github.com/Yomisana/stable-diffusion-installer/blob/master/equipment.md")
             pressAnyKey(`${i.__('pressAnyKey')} ${i.__('scan hardware info...')} | ${i.__('pressAnyKey cancel')} ${i.__('Back Menu')}`, {
                 ctrlC: "reject"
             }).then(async () => {

@@ -1,6 +1,6 @@
 require('./src/global');
 // env settings
-cmd.clear();cmd.title("Better Stable Diffusion");
+cmd.clear();cmd.title(app_title, "");
 app_version.current = app.version
 // app settings
 config.load()
@@ -12,6 +12,8 @@ async function debug(){
     process.argv.forEach(function (val, index, array) {
         // console.log("參數" ,index + ': ' + val);
         if (val.includes('--dev')) {
+            app_title = "Better Stable Diffusion - In dev"
+            cmd.title(app_title, "");
             app_dev = true;
             console.log("In dev")
         }
@@ -49,6 +51,7 @@ async function debug(){
 
 const $ = {
     init: async function(){
+        cmd.title(app_title, `waiting...`);
         await ascii_art("yellow",app_name);
         // active
         firstrun = config.get("firstrun");

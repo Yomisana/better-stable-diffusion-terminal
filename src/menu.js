@@ -1,6 +1,7 @@
 const $ = {
     welcome: async function(){  
         cmd.clear(); await ascii_art("yellow","Welcome");
+        cmd.title(app_title, `Welcome`);
         inquirer.prompt([
             {
             type: 'list',
@@ -34,6 +35,7 @@ const $ = {
     },
     main: async function(){
         cmd.clear(); await ascii_art("yellow", app_name);
+        cmd.title(app_title, `Lobby`);
         // console.log("At menu");
         console.log(color("blue"),`App Version: ${app_version.current}`);
         inquirer.prompt([
@@ -91,6 +93,7 @@ const $ = {
 const settings = {
     menu: async function(){
         cmd.clear(); await ascii_art("yellow", "Settings");
+        cmd.title(app_title, `Settings`);
         inquirer.prompt([
             {
             type: 'list',

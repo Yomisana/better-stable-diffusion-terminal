@@ -15,6 +15,7 @@ global.extract_zip = require('extract-zip');
 global.ProgressBar = require('progress');
 global.validator = require('validator');
 global.semver = require('semver');
+global.setTitle = require('console-title');
 // Main Module
 global.i = require('./lang/i18n.js');global.displaylang = null;
 global.config = require('./config');
@@ -27,6 +28,7 @@ global.app = require('../package.json');
 global.repoUrl = "https://api.github.com/repos/yomisana/better-stable-diffusion/releases/latest";
 global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/releases/latest/download/Better-Stable-Diffusion.exe";
 global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
+global.app_title = "Better Stable Diffusion"
 global.app_name = "Better Stable Diffusion"
 global.app_version = {
     current: null,
@@ -86,15 +88,15 @@ global.hardware = {
 
 // Function
 global.cmd = {
-    title: function(text){
-        return new Promise((resolve, reject)=>{
+    title: function(text, add){
+        return new Promise((resolve, reject)=>{     
             try {
-                if(text.length == 0){
+                if(add.length == 0){
                     // console.log(`目前Title 為: ${app_name}`)
-                    String.fromCharCode(27) + "]0;" + `${app_name}` + String.fromCharCode(7);
+                    setTitle(`${app_title}`);
                 }else{
                     // console.log(`目前Title 為: ${text}`)
-                    String.fromCharCode(27) + "]0;" + `${text}` + String.fromCharCode(7);
+                    setTitle(`${app_title} - ${add}`);
                 }
             } catch (error) {
                 // console.log(`目前Title 為: ${app_name}`)
