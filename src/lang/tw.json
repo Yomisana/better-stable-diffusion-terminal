@@ -51,6 +51,7 @@
     "Done Extract": "完成解壓縮",
     "Target": "目標路徑",
     "Outpput": "輸出路徑",
+    "Run Stable Diffusion": "執行Stable Diffusion",
     "Created directory": "創建目錄",
     "already exists and hash matches.": "已經存在 並且 檔案完整正確.",
     "already exists but hash does not match, redownloading...": "已經存在 但是 檔案不完整. 重新下載...",

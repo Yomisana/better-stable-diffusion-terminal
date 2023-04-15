@@ -51,6 +51,7 @@
     "Done Extract": "Done Extract",
     "Target": "Target",
     "Outpput": "Outpput",
+    "Run Stable Diffusion": "Run Stable Diffusion",
     "Created directory": "Created directory",
     "already exists and hash matches.": "already exists and hash matches.",
     "already exists but hash does not match, redownloading...": "already exists but hash does not match, redownloading...",
