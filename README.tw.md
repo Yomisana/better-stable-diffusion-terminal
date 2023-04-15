@@ -18,10 +18,22 @@
 [點我下載軟體也可以!](https://github.com/Yomisana/stable-diffusion-installer/releases/latest/download/Stable-Diffusion-Installer.exe)
 
 ## 特色
-- [X]自動更新
+- 自動更新軟體
+  - 啟動時檢查更新 Better Stable Diffusion
+- 安裝 AUTOMATIC1111/stable-diffusion-webui
+  - 免安裝 Python: 不需要再安裝! 安裝版本的 Python 不干擾你的系統先前持有或是不想安裝Python
+- [X]執行 AUTOMATIC1111/stable-diffusion-webui
+  - [X]免安裝 Git: 不需要再安裝! 安裝版本的 Python 不干擾你的系統!
+  - [X]啟動時設定此啟動附帶參數
+    - [X]可以記憶在`config.json`上
 - [X]瀏覽器擴充插件自動掛勾下載模型
+  - [X]頁面上監聽模型資源網站上的版本與類型，選擇好後直接下載到執行中的Better Stable Diffusion的軟體路徑上的 Stable Diffsuion 上
 - [X]可以偵測當前環境是否移動到另外一台電腦上進行額外修改
+  - [X]讓你的 venv 可以正常運行
 - [X]檢查路徑是否為純英文路徑
+  - [X]看起來這部分好像沒有問題
+- 軟體額外指令
+  - `--dev`:執行檔目錄下創建一個 `better-stable-diffusion`資料夾把所有相關產生的資料夾存放在此資料夾底下。
 - 全球性語言
   - 中文
   - 英文
