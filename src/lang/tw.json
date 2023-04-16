@@ -1,6 +1,6 @@
 {
     "Please choose what you wanna do?": "請選擇你要幹嘛?",
-    "Auto Install Stable Diffusion": "自動安裝 Stable Diffusion",
+    "Install Stable Diffusion": "安裝 Stable Diffusion",
     "Check System what settings recommended of My PC": "檢查電腦推薦的設置",
     "Exit": "退出",
     "Back Menu": "回到主選單",
@@ -25,7 +25,7 @@
     "url": "網址",
     "Display Language": "顯示語言",
     "Please choose your laungue": "請選擇你要顯示的語言",
-    "Install Model URL": "安裝模型網址",
+    "Manual Install Model URL": "手動安裝模型網址",
     "Download Model": "下載模型",
     "Past url here": "在這裡貼上網址",
     "Past py version here": "在這裡貼上python 版本",

@@ -33,3 +33,11 @@
 // // 檢查 VC Redist 2005、2008、2010、2012、2013、2015、2017、2019 版本
 // const versions = ['8.0', '9.0', '10.0', '11.0', '12.0', '14.0', '15.0', '16.0'];
 // versions.forEach(version => hasVCRedistInstalled(version));
+
+const $ = {
+    sd: function(){
+        
+    }
+}
+
+module.exports = $;

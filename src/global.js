@@ -17,17 +17,19 @@ global.validator = require('validator');
 global.semver = require('semver');
 global.setTitle = require('console-title');
 // Main Module
-global.i = require('./lang/i18n.js');global.displaylang = null;
+global.i = require('./lang/i18n');
 global.config = require('./config');
 global.menu = require('./menu');
 global.check = require('./checkpc');
 global.install = require('./install');
 global.updater = require('./updater');
 global.app = require('../package.json');
+global.running = require('./running');
 // Main
 global.repoUrl = "https://api.github.com/repos/yomisana/better-stable-diffusion/releases/latest";
 global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/releases/latest/download/Better-Stable-Diffusion.exe";
 global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
+global.displaylang = null;
 global.app_title = "Better Stable Diffusion"
 global.app_name = "Better Stable Diffusion"
 global.app_version = {
@@ -153,7 +155,7 @@ global.close = function(){
     process.exit(0);
 }
 
-// Download
+// Download v1
 global.downloadinfo = {
     targetSize: 0, // 目標檔案大小 (KB)
     downloadedSize: 0 // 目標已下載檔案大小 (KB)
@@ -189,7 +191,7 @@ global.downloadData = function(url, folderpath) {
         const req = request(url);
         const stream = req.pipe(fs.createWriteStream(filepath));
   
-        // progressBar
+        // progressBar v1
         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
           total: 10
         }); 

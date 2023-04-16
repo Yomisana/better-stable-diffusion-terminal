@@ -44,9 +44,9 @@ const $ = {
             name: 'choice',
             message: `${i.__('Please choose what you wanna do?')}:`,
             choices: [
-                `X${i.__('Install Model URL')}`,
                 `${i.__('Run Stable Diffusion')}`,
-                `${i.__('Auto Install Stable Diffusion')}`,
+                `X${i.__('Manual Install Model URL')}`,
+                `${i.__('Install Stable Diffusion')}`,
                 `${i.__('Check System what settings recommended of My PC')}`,
                 `${i.__('Settings')}`,
                 `${i.__('Exit')}`
@@ -58,11 +58,11 @@ const $ = {
                 case `${i.__('Run Stable Diffusion')}`:
                     running.sd();
                     break;
-                case `${i.__('Auto Install Stable Diffusion')}`:
+                case `${i.__('Install Stable Diffusion')}`:
                     // install.sd_core();
                     install.menu();
                     break;
-                case `${i.__('Install Model URL')}`:
+                case `${i.__('Manual Install Model URL')}`:
                     // $.models_menu();
                     break;
                 case `${i.__('Check System what settings recommended of My PC')}`:

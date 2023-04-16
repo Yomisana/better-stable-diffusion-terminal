@@ -1,6 +1,6 @@
 {
     "Please choose what you wanna do?": "Please choose what you wanna do?",
-    "Auto Install Stable Diffusion": "Auto Install Stable Diffusion",
+    "Install Stable Diffusion": "Install Stable Diffusion",
     "Check System what settings recommended of My PC": "Check System what settings recommended of My PC",
     "Exit": "Exit",
     "Back Menu": "Back Menu",
@@ -25,7 +25,7 @@
     "url": "url",
     "Display Language": "Display Language",
     "Please choose your laungue": "Please choose your laungue",
-    "Install Model URL": "Install Model URL",
+    "Manual Install Model URL": "Manual Install Model URL",
     "Download Model": "Download Model",
     "Past url here": "Past url here",
     "Past py version here": "Past python version here",
