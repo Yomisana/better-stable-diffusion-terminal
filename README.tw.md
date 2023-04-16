@@ -24,6 +24,7 @@
   - 免安裝 Python: 不需要再安裝! 安裝版本的 Python 不干擾你的系統先前持有或是不想安裝Python
 - [X]執行 AUTOMATIC1111/stable-diffusion-webui
   - [X]免安裝 Git: 不需要再安裝! 安裝版本的 Python 不干擾你的系統!
+    - [X]需要的依賴: 7zip
   - [X]啟動時設定此啟動附帶參數
     - [X]可以記憶在`config.json`上
 - [X]瀏覽器擴充插件自動掛勾下載模型

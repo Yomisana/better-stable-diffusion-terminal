@@ -50,9 +50,12 @@ global.d_value = {
     // Stable Diffusion Webui
     temp: `${process.cwd()}\\temp`,
     bin: `${process.cwd()}\\bin`,
-    sdw: {
-        url: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
-    },
+    sdwurl: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
+    default_pyurl: `https://www.python.org/ftp/python/version/python-version-embed-amd64.zip`,
+    default_pyver: `3.10.6`,
+    giturl: `https://github.com/git-for-windows/git/releases/latest/download/PortableGit-2.40.0-64-bit.7z.exe`,
+    zipurl: `https://www.7-zip.org/a/7zr.exe`,
+    vc_redisturl: `https://aka.ms/vs/16/release/vc_redist.x64.exe`,
     dev_temp: `${process.cwd()}\\better-stable-diffusion\\temp`,
     dev_bin: `${process.cwd()}\\better-stable-diffusion\\bin`,
 }

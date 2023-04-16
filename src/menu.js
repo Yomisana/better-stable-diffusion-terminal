@@ -59,7 +59,8 @@ const $ = {
                     running.sd();
                     break;
                 case `${i.__('Auto Install Stable Diffusion')}`:
-                    install.sd_core();
+                    // install.sd_core();
+                    install.menu();
                     break;
                 case `${i.__('Install Model URL')}`:
                     // $.models_menu();

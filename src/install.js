@@ -1,12 +1,30 @@
 const $ = {
-    sd_core: async function(){
+    menu: async function(){
+        let sdurl = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdwurl)
+        console.log(color("yellow"),`Only can install 3.10.6 ~ 3.10.11 version of pyhton`);
+        let pyver = await menu.input(`${i.__('Past py version here')} (${d_value.default_pyver})`, d_value.default_pyver);
+        await $.sd_core(sdurl);
+        await $.python(pyver);
+
+        await $.git();
+        await $.zip();
+        await $.vc_redist();
+        pressAnyKey(`${i.__('pressAnyKey')}`, {
+            ctrlC: "reject"
+        }).then(async () => {
+            cmd.clear(); await ascii_art("red", app_name);        menu.main();
+        }).catch(() => {
+            console.log('You pressed CTRL+C');        menu.main();
+        })
+    },
+    sd_core: async function(sdurl){
         // 下載 AUTOMATIC1111 / stable-diffusion-webui
         // 核心程式
         // https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip
         
         // 選擇下載位置(預設: AUTOMATIC1111/stable-diffusion-webui):
         cmd.title(app_title, `Ready Install Stable Diffusion`);
-        let sdurl = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
+        // let sdurl = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdwurl);
         console.log(sdurl);
 
         // 下載
@@ -21,26 +39,22 @@ const $ = {
             console.log(color("blue"),`${i.__('Default Download Folder')}: ${targetPath}`);
             let filename = path.basename(sdurl);
             await downloadData(sdurl, path.join(targetPath));
-            if(sdurl === d_value.sdw.url) await extract(filename, targetPath, targetBinPath, "sd");
+            if(sdurl === d_value.sdwurl) await extract(filename, targetPath, targetBinPath, "sd");
             else console.log(color("red"), `${filename} ${i.__('decompressed or custom link will not decompress by itself')}`);
-            $.python();
+            // $.python();
         }
     },
-    python: async function(){
+    python: async function(pyver){
         cmd.title(app_title, `Ready Install Python`);
-        let default_pyurl = "https://www.python.org/ftp/python/version/python-version-embed-amd64.zip"
-        let default_pyver = "3.10.6"
-        console.log(color("yellow"),`Only can install 3.10.6 ~ 3.10.11 version of pyhton`);
-        let pyurl = await menu.input(`${i.__('Past py version here')} (${default_pyver})`, default_pyver);
-        if (!semver.valid(pyurl)) {
+        if (!semver.valid(pyver)) {
             console.log('輸入的 Python 版本號不符合格式');
             $.python()
-        } else if (!semver.satisfies(pyurl, '>=3.10.6 <=3.10.11')) {
+        } else if (!semver.satisfies(pyver, '>=3.10.6 <=3.10.11')) {
             console.log('輸入的 Python 版本號不在支援範圍內');
             $.python()
         } else {
             console.log('輸入的 Python 版本號符合要求');
-            pyurl = default_pyver === pyurl ? default_pyurl.replace(/version/g, `3.10.6`) : default_pyurl.replace(/version/g, `${pyurl}`);
+            pyurl = d_value.default_pyver === pyver ? d_value.default_pyurl.replace(/version/g, `3.10.6`) : d_value.default_pyurl.replace(/version/g, `${pyver}`);
             console.log(pyurl);
             // 下載
             if (!validator.isURL(pyurl)) {
@@ -56,13 +70,6 @@ const $ = {
                 await downloadData(pyurl, path.join(targetPath));
                 await extract(filename, targetPath, `${targetBinPath}\\python`, "py");
                 await $.pip(targetBinPath);
-                pressAnyKey(`${i.__('pressAnyKey')}`, {
-                    ctrlC: "reject"
-                }).then(async () => {
-                    cmd.clear(); await ascii_art("red", app_name);        menu.main();
-                }).catch(() => {
-                    console.log('You pressed CTRL+C');        menu.main();
-                })
             }
         }
     },
@@ -104,6 +111,30 @@ const $ = {
         } catch (err) {
             console.error(err);
         }
+    },
+    git: function(){
+        const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+        const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+        return new Promise(async (resolve, reject) => {
+            await downloadData(d_value.giturl, path.join(targetPath));
+            resolve();
+        })
+    },
+    zip: function(){
+        const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+        const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+        return new Promise(async (resolve, reject) => {
+            await downloadData(d_value.zipurl, path.join(targetPath));
+            resolve();
+        })
+    },
+    vc_redist: function(){
+        const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+        const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+        return new Promise(async (resolve, reject) => {
+            await downloadData(d_value.vc_redisturl, path.join(targetPath));
+            resolve();
+        })
     }
 }
 
