@@ -5,6 +5,8 @@ app_version.current = app.version
 // app settings
 config.load()
     .then(debug())
+    // .then(console.log(targetPath))
+    // .then(console.log(targetBinPath))
     .then(updater.checkForUpdates())
     // .then(init());
 
@@ -18,6 +20,8 @@ async function debug(){
             console.log("In dev")
         }
     });
+    targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+    targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
     // let url = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
     // await downloadData(`${url}`, path.join(`${d_value.temp}`));
     // console.log("I am First");

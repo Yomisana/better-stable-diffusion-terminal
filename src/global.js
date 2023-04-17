@@ -8,6 +8,7 @@ global.os = require('os');
 global.osinfo = require('systeminformation');
 global.pressAnyKey = require('press-any-key');
 global.exec = require('child_process').exec;
+global.execSync = require('child_process').execSync;
 global.request = require('request');
 global.crypto = require('crypto');
 global.process = require('process');
@@ -44,7 +45,6 @@ global.app_location = {
         config: `${process.cwd()}\\config\\config.json`,
     },
 }
-
 global.app_dev = false;
 
 
@@ -61,6 +61,8 @@ global.d_value = {
     dev_temp: `${process.cwd()}\\better-stable-diffusion\\temp`,
     dev_bin: `${process.cwd()}\\better-stable-diffusion\\bin`,
 }
+global.targetPath = null;
+global.targetBinPath = null;
 // global.download = {
 //     default_folder: `${process.cwd()}\\temp`,
 //     url: {
@@ -281,5 +283,32 @@ global.extract = async function(filename, target_path, output_path, value){
     } catch (err) {
         // handle any errors
         console.log("error" + err)
+    }
+}
+
+global.VCRedistversions = [
+    '8.0', '9.0', '10.0', '11.0', '12.0', '14.0', '15.0', '16.0'
+];
+
+global.VCRedistInstalled = function(version) {
+    // VC Redist registry Path - 註冊表路徑
+    let registryPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\';
+
+    let path = `${registryPath}${version}`;
+
+    try {
+        execSync(`reg query "${path}"`, { 
+            timeout: 5000,
+            // stdio: 'inherit'
+            stdio: 'ignore'
+        });
+        // console.log(color("green"),`VC Redist ${version} is installed`);
+        return true;
+    } catch (err) {
+        // console.log(color("red"),`VC Redist ${version} is not installed`);
+        // if(version == `14.0`){
+        //     console.log(color("yellow"), "Install 14.0 VC Redist...");
+        // }
+        return false;
     }
 }

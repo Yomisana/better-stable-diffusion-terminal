@@ -33,8 +33,8 @@ const $ = {
             $.sd_core();
         }else{
             cmd.title(app_title, `Download & Install Stable Diffusion`);
-            const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
-            const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+            // const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+            // const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
             console.log(color("yellow"),`${i.__('Start Download Stable Diffusion...')}`);
             console.log(color("blue"),`${i.__('Default Download Folder')}: ${targetPath}`);
             let filename = path.basename(sdurl);
@@ -62,8 +62,8 @@ const $ = {
                 $.python();
             }else{
                 cmd.title(app_title, `Download & Install Python`);
-                const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
-                const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+                // const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+                // const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
                 console.log(color("yellow"),`${i.__('Start Download Python...')}`);
                 console.log(color("blue"),`${i.__('Default Download Folder')}: ${targetPath}`);
                 let filename = path.basename(pyurl);
@@ -113,24 +113,24 @@ const $ = {
         }
     },
     git: function(){
-        const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
-        const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+        // const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+        // const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
         return new Promise(async (resolve, reject) => {
             await downloadData(d_value.giturl, path.join(targetPath));
             resolve();
         })
     },
     zip: function(){
-        const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
-        const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+        // const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+        // const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
         return new Promise(async (resolve, reject) => {
             await downloadData(d_value.zipurl, path.join(targetPath));
             resolve();
         })
     },
     vc_redist: function(){
-        const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
-        const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+        // const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
+        // const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
         return new Promise(async (resolve, reject) => {
             await downloadData(d_value.vc_redisturl, path.join(targetPath));
             resolve();

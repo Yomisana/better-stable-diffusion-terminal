@@ -10,33 +10,47 @@
 // call webui.bat
 
 
-// const { execSync } = require('child_process');
-// const { existsSync } = require('fs');
 
-// // VC Redist 註冊表路徑
-// const registryPath = 'HKLM\\SOFTWARE\\Microsoft\\VisualStudio\\';
 
-// // 檢查是否有 VC Redist 的註冊表項目存在
-// function hasVCRedistInstalled(version) {
-//   const path = `${registryPath}${version}.0`;
-
-//   try {
-//     const output = execSync(`reg query "${path}"`, { timeout: 5000 });
-//     console.log(`VC Redist ${version} is installed`);
-//     return true;
-//   } catch (err) {
-//     console.log(`VC Redist ${version} is not installed`);
-//     return false;
-//   }
-// }
-
-// // 檢查 VC Redist 2005、2008、2010、2012、2013、2015、2017、2019 版本
-// const versions = ['8.0', '9.0', '10.0', '11.0', '12.0', '14.0', '15.0', '16.0'];
-// versions.forEach(version => hasVCRedistInstalled(version));
 
 const $ = {
     sd: function(){
-        
+        console.log(color("yellow"), "Check install VC Redist...")
+        // // 檢查是否有 VC Redist 的註冊表項目存在
+        // 檢查 VC Redist 2005、2008、2010、2012、2013、2015、2017、2019 版本
+        VCRedistversions.forEach(async version => {
+            let result = VCRedistInstalled(version)
+            // console.log(`${version}:${result}`)
+            if(version === `14.0` && result === false){
+                await install.vc_redist();
+                console.log(color("yellow"), `${version} VC Redist - Installing...`);
+                console.log(color("yellow"), `WARNING! If you have enabled windows uac, please agree to the installation request that appears`)
+                console.log(color("yellow"), `UAC:`)
+                console.log(color("yellow"), `Name: Microsoft Visual C++ 2015-2019 Redistributable (x64) - 14.29.30139`)
+                execSync(`${targetPath}\\vc_redist.x64.exe /quiet /norestart /log ${targetPath}\\vcr14.0_logger\\vcr14.0.txt`, (error, stdout, stderr) => {
+                    if (error) {
+                      console.error(`執行命令時出現錯誤： ${error}`);
+                      return;
+                    }
+                    console.log(`stdout: ${stdout}`);
+                    console.error(`stderr: ${stderr}`);
+                });
+            }else{
+                if(result){
+                    console.log(color("green"), `${version} VC Redist - Installed`)
+                }else{
+                    console.log(color("red"), `${version} VC Redist - Not Install`);
+                }
+            }
+        });
+        console.log("Finished VC Redist check & install")
+        pressAnyKey(`${i.__('pressAnyKey')}`, {
+            ctrlC: "reject"
+        }).then(async () => {
+            cmd.clear(); await ascii_art("red", app_name);        menu.main();
+        }).catch(() => {
+            console.log('You pressed CTRL+C');        menu.main();
+        })
     }
 }
 
