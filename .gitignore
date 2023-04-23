@@ -1,13 +1,10 @@
+# nodejs
 node_modules
 package-lock.json
-src/installer
-src/bin
-src/config
+# reop don't upload folder or file
 bin
-temp
 dist
 better-stable-diffusion
-dist/Stable-Diffusion-Installer.exe
-installer/
-config/config.json
+dist
+config
 skill.md
