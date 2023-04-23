@@ -52,6 +52,7 @@
     "Target": "Target",
     "Outpput": "Outpput",
     "Run Stable Diffusion": "Run Stable Diffusion",
+    "Run Stable Diffusion Last Status": "Run Stable Diffusion Last Status",
     "Created directory": "Created directory",
     "already exists and hash matches.": "already exists and hash matches.",
     "already exists but hash does not match, redownloading...": "already exists but hash does not match, redownloading...",

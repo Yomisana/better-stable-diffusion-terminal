@@ -30,7 +30,75 @@ const $ = {
                     break;
             }
             cmd.clear();
-            $.main();
+            $.status();
+        });
+    },
+    status: async function(){
+        lastrunstatus = config.get("lastrunstatus")
+        if(lastrunstatus === undefined){
+            config.default();
+            lastrunstatus = config.get("lastrunstatus");
+        }
+        if(lastrunstatus){
+            menu.main_last();
+        }else{
+            lastrunstatus = config.get("lastrunstatus")
+            if(lastrunstatus === undefined){
+                lastrunstatus = false;
+                config.set("lastrunstatus", lastrunstatus);
+            }
+            menu.main();
+        }
+    },
+    main_last: async function(){
+        cmd.clear(); await ascii_art("yellow", app_name);
+        cmd.title(app_title, `Lobby`);
+        // console.log("At menu");
+        console.log(color("blue"),`App Version: ${app_version.current}`);
+        inquirer.prompt([
+        {
+            type: 'list',
+            name: 'choice',
+            message: `${i.__('Please choose what you wanna do?')}:`,
+            choices: [
+                `${i.__('Run Stable Diffusion Last Status')}`,
+                `${i.__('Run Stable Diffusion')}`,
+                `X${i.__('Manual Install Model URL')}`,
+                `${i.__('Install Stable Diffusion')}`,
+                `${i.__('Check System what settings recommended of My PC')}`,
+                `${i.__('Settings')}`,
+                `${i.__('Exit')}`
+            ]
+            }
+        ]).then(function(answers) {
+            firstmenu = false;
+            switch (answers.choice) {
+                case `${i.__('Run Stable Diffusion Last Status')}`:
+                    running.main_last();
+                    break;
+                case `${i.__('Run Stable Diffusion')}`:
+                    running.main();
+                    break;
+                case `${i.__('Install Stable Diffusion')}`:
+                    // install.sd_core();
+                    install.menu();
+                    break;
+                case `${i.__('Manual Install Model URL')}`:
+                    // $.models_menu();
+                    break;
+                case `${i.__('Check System what settings recommended of My PC')}`:
+                    onlycheck = true;
+                    check.pc();
+                    break;
+                case `${i.__('Settings')}`:
+                    settings.menu();
+                    break;
+                case `${i.__('Exit')}`:
+                    close();
+                    break;
+                default:
+                    break;
+            }
         });
     },
     main: async function(){
@@ -56,7 +124,7 @@ const $ = {
             firstmenu = false;
             switch (answers.choice) {
                 case `${i.__('Run Stable Diffusion')}`:
-                    running.sd();
+                    running.main();
                     break;
                 case `${i.__('Install Stable Diffusion')}`:
                     // install.sd_core();

@@ -56,9 +56,9 @@ const $ = {
                 pressAnyKey(`${i.__('pressAnyKey')}`, {
                     ctrlC: "reject"
                 }).then(async () => {
-                    cmd.clear(); await ascii_art("red", app_name);menu.main();
+                    cmd.clear(); await ascii_art("red", app_name);menu.status();
                 }).catch(() => {
-                    console.log('You pressed CTRL+C');  menu.main();
+                    console.log('You pressed CTRL+C');  menu.status();
                 })
             }).catch(() => {
                 console.log('You pressed CTRL+C')

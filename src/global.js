@@ -31,6 +31,7 @@ global.repoUrl = "https://api.github.com/repos/yomisana/better-stable-diffusion/
 global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/releases/latest/download/Better-Stable-Diffusion.exe";
 global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
 global.displaylang = null;
+global.lastrunstatus = null;
 global.app_title = "Better Stable Diffusion"
 global.app_name = "Better Stable Diffusion"
 global.app_version = {

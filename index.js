@@ -73,7 +73,7 @@ const $ = {
                 config.set("displaylang", displaylang);
             }
             i.setLocale(config.get("displaylang"));
-            menu.main();
+            menu.status();
         }
     }
 }

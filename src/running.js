@@ -9,15 +9,42 @@
 
 // call webui.bat
 
-
-
-
-
 const $ = {
+    main_last: async function(){
+        $.vcr();
+        $.sd();
+        // 如果找不到 $.basic_settings_sd(); 所輸出的 config/command_args.txt 就跳轉到 $.basic_settings_sd();
+        pressAnyKey(`${i.__('pressAnyKey')}`, {
+            ctrlC: "reject"
+        }).then(async () => {
+            cmd.clear(); await ascii_art("red", app_name);        menu.status();
+        }).catch(() => {
+            console.log('You pressed CTRL+C');        menu.status();
+        })
+    },
+    main: async function(){
+        $.vcr();
+        $.sd();
+        $.basic_settings_sd();
+        pressAnyKey(`${i.__('pressAnyKey')}`, {
+            ctrlC: "reject"
+        }).then(async () => {
+            cmd.clear(); await ascii_art("red", app_name);        menu.status();
+        }).catch(() => {
+            console.log('You pressed CTRL+C');        menu.status();
+        })
+    },
+    basic_settings_sd: function(){
+
+    },
     sd: function(){
-        console.log(color("yellow"), "Check install VC Redist...")
+        lastrunstatus = true;
+        config.set("lastrunstatus", lastrunstatus);
+    },
+    vcr: function(){
         // // 檢查是否有 VC Redist 的註冊表項目存在
         // 檢查 VC Redist 2005、2008、2010、2012、2013、2015、2017、2019 版本
+        console.log(color("yellow"), "Check install VC Redist...")
         VCRedistversions.forEach(async version => {
             let result = VCRedistInstalled(version)
             // console.log(`${version}:${result}`)
@@ -44,13 +71,6 @@ const $ = {
             }
         });
         console.log("Finished VC Redist check & install")
-        pressAnyKey(`${i.__('pressAnyKey')}`, {
-            ctrlC: "reject"
-        }).then(async () => {
-            cmd.clear(); await ascii_art("red", app_name);        menu.main();
-        }).catch(() => {
-            console.log('You pressed CTRL+C');        menu.main();
-        })
     }
 }
 
