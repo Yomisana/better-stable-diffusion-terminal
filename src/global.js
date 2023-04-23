@@ -32,6 +32,7 @@ global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/relea
 global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
 global.displaylang = null;
 global.lastrunstatus = null;
+global.gpulist = [];
 global.app_title = "Better Stable Diffusion"
 global.app_name = "Better Stable Diffusion"
 global.app_version = {
@@ -44,6 +45,7 @@ global.app_location = {
     },
     file: {
         config: `${process.cwd()}\\config\\config.json`,
+        command_args: `${process.cwd()}\\config\\command_args.txt`,
     },
 }
 global.app_dev = false;
