@@ -25,14 +25,14 @@ const $ = {
         }
     },
     vcr: function(){
-        // // 檢查是否有 VC Redist 的註冊表項目存在
+        // 檢查是否有 VC Redist 的註冊表項目存在
         // 檢查 VC Redist 2005、2008、2010、2012、2013、2015、2017、2019 版本
         console.log(color("yellow"), "Check install VC Redist...")
         VCRedistversions.forEach(async version => {
             let result = VCRedistInstalled(version)
             // console.log(`${version}:${result}`)
             if(version === `14.0` && result === false){
-                await install.vc_redist();
+                await install.vc_redist(); // download 14.0 vrc
                 console.log(color("yellow"), `${version} VC Redist - Installing...`);
                 console.log(color("yellow"), `WARNING! If you have enabled windows uac, please agree to the installation request that appears`)
                 console.log(color("yellow"), `UAC:`)
@@ -46,6 +46,10 @@ const $ = {
                     console.error(`stderr: ${stderr}`);
                 });
             }else{
+                if(version === `14.0` && result === true){
+                    console.log(color("green"), `${version} VC Redist - Installed`)
+                }
+                
                 // if(result){
                 //     console.log(color("green"), `${version} VC Redist - Installed`)
                 // }else{
@@ -74,6 +78,7 @@ const $ = {
             $.basic_settings_sd();
         }else{
             console.log("設定檔裡面已經有先前所記錄的設定參數，你是否要繼續設定新參數或是使用上一次狀態執行Stable Diffusion，如果繼續將會覆蓋舊有的參數數據!")
+            console.log(`config file inside command_args: ${re}`)
             inquirer.prompt([
                 {
                 type: 'list',
