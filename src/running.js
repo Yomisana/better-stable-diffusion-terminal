@@ -111,21 +111,35 @@ const $ = {
         // $.exit();
     },
     basic_settings_sd: async function(){
-        gpulist = [];
         console.log("硬體掃描顯示卡中...");
         await check.gpu().then((value) => {
+            console.log(color("yellow"), `[WARN]以下是簡單測試你的顯示卡是否持有相關浮點數運算功能，顯卡是否支援詳細還是需要您至techpowerup.com 查看您當前的型號是否確認持有，二次確認!`);
             console.log(color("yellow"),`[GPU  X] Find ${value.length} GPU(s)`);
             let data = value.map((x, index) => {
-                gpulist.push(`${x.model} ${x.vram} GB`)
+                // gpulist.push(`${x.model} ${x.vram} GB`)
+                // 判別 FP 16 32 64 是否持有
+                console.log(`${x.model} ${x.vram} GB`);
+                if(x.model.includes('GeForce GTX 9') || x.model.includes('Tesla M') ) {
+                    console.log(`此系列顯卡缺少 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更新顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
+                }else if (x.model.includes('GeForce GTX 16')) {
+                    console.log(`此系列顯卡可能 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更新顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
+                }else if (x.model.includes('GeForce GTX 10') || x.model.includes('GeForce RTX 20') || x.model.includes('GeForce RTX 30') || x.model.includes('GeForce RTX 40')) {
+                    console.log(`支援所有 FP16 FP32 FP64 浮點數運算，是否開啟 xformers 加速繪圖製作?`);
+                    // console.log('This GPU supports FP16, FP32 and FP64.');
+                }
+                else {
+                    console.log('Cannot determine floating point capabilities for this GPU.');
+                    console.log('無法確定此 GPU 的浮點功能。');
+                }
             });
         });
-        console.log(gpulist);
-        console.log(`僅供參考: 你的記憶體小於 8G 記憶體`)
-        console.log(`如果你小於 6G 必定確定新增低顯存指令(6G版本的顯卡可能需要或是不需要)`)
-        console.log(`你的顯卡好像僅支援[半精度(FP16),單精度(FP32),雙精度(FP64)]`);
-        console.log(`可能引發 某些模型使用 半精度(FP16) 製作的可能會無法使用`);
-        console.log(`可能引發 某些模型使用 單精度(FP32) 製作的可能會無法使用`);
-        console.log(`可能引發 某些模型使用 雙精度(FP64) 製作的可能會無法使用`);
+        // console.log(gpulist);
+        // console.log(`僅供參考: 你的記憶體小於 8G 記憶體`)
+        // console.log(`如果你小於 6G 必定確定新增低顯存指令(6G版本的顯卡可能需要或是不需要)`)
+        // console.log(`你的顯卡好像僅支援[半精度(FP16),單精度(FP32),雙精度(FP64)]`);
+        // console.log(`可能引發 某些模型使用 半精度(FP16) 製作的可能會無法使用`);
+        // console.log(`可能引發 某些模型使用 單精度(FP32) 製作的可能會無法使用`);
+        // console.log(`可能引發 某些模型使用 雙精度(FP64) 製作的可能會無法使用`);
     },
     prepare: function(){
         $.vcr();
