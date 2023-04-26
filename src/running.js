@@ -59,17 +59,6 @@ const $ = {
         });
         console.log("Finished VC Redist check & install")
     },
-    exit: function(){
-        pressAnyKey(`${i.__('pressAnyKey')}`, {
-            ctrlC: "reject"
-        }).then(async () => {
-            cmd.clear(); await ascii_art("red", app_name);        menu.status();
-        }).catch(() => {
-            console.log('You pressed CTRL+C');        menu.status();
-        })
-    },
-    // 上方為已完成不要在動他了
-    // 下方未完成
     main: async function(){
         let re = $.read_sd_config();
         if(re === `nofile` || re === false){
@@ -93,13 +82,13 @@ const $ = {
             ]).then(function(answers) {
                 switch (answers.choice) {
                     case `${i.__('Run as last status')}`:
-                        $.main_last();
+                        $.main_last(); // 尚未完成正在製作 basic_settings_sd();
                         break;
                     case `${i.__('keep create new one')}`:
-                        $.basic_settings_sd();
+                        $.basic_settings_sd(); // 正在製作中...
                         break;
                     case `${i.__('Cancel back menu')}`:
-                        menu.status();
+                        menu.status(); // 完成
                         break;
                     default:
                         break;
@@ -110,32 +99,82 @@ const $ = {
         // $.prepare();
         // $.exit();
     },
+    exit: function(){
+        pressAnyKey(`${i.__('pressAnyKey')}`, {
+            ctrlC: "reject"
+        }).then(async () => {
+            cmd.clear(); await ascii_art("red", app_name);        menu.status();
+        }).catch(() => {
+            console.log('You pressed CTRL+C');        menu.status();
+        })
+    },
+    // 上方為已完成不要在動他了
+    // 下方未完成
     basic_settings_sd: async function(){
-        console.log("硬體掃描顯示卡中...");
-        await check.gpu().then((value) => {
-            console.log(color("yellow"), `[WARN]以下是簡單測試你的顯示卡是否持有相關浮點數運算功能，顯卡是否支援詳細還是需要您至techpowerup.com 查看您當前的型號是否確認持有，二次確認!`);
-            console.log(color("yellow"),`[GPU  X] Find ${value.length} GPU(s)`);
-            let data = value.map((x, index) => {
-                // gpulist.push(`${x.model} ${x.vram} GB`)
-                // 判別 FP 16 32 64 是否持有
-                console.log(`${x.model} - ${x.vram} GB`);
-                if(x.model.includes('GeForce GTX 9') || x.model.includes('Tesla M') ) {
-                    console.log(color("yellow"), `此系列顯卡缺少 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更新顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
-                }else if (x.model.includes('GeForce GTX 16')) {
-                    console.log(color("yellow"), `此系列顯卡可能 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更新顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
-                }else if (x.model.includes('GeForce GTX 10') || x.model.includes('GeForce RTX 20') || x.model.includes('GeForce RTX 30') || x.model.includes('GeForce RTX 40')) {
-                    console.log(color("green"), `支援所有 FP16 FP32 FP64 浮點數運算，是否開啟 xformers 加速繪圖製作?`);
-                    // console.log('This GPU supports FP16, FP32 and FP64.');
-                }else if (x.model.includes('Tesla K40') || x.model.includes('Tesla K80') || x.model.includes('Tesla P100') || x.model.includes('Tesla V100')) {
-                    console.log(color("green"), `支援所有 FP16 FP32 FP64 浮點數運算，是否開啟 xformers 加速繪圖製作?`);
-                    // console.log('This GPU supports FP16, FP32 and FP64.');
-                }else {
-                    // console.log(color("red"), `Cannot determine floating point capabilities for this GPU.`);
-                    console.log(color("red"), `無法確定此 GPU 的浮點功能。`);
-                    console.log(color("red"), `軟體無法辨識的顯卡是否支援浮點運算功能，詳細需要您至techpowerup.com 查看您當前的型號是否確認持有!`);
+        // gpu part settings > prepare > run bat execsync > if better stable diffusion dead will close too.
+        // $.gpu_detect();
+        gpulist = await $.getCUDAlist();
+        console.log(color("yellow"),`Find ${gpulist.length} GPU`);
+        console.log(gpulist);
+        // await $.chooseGPU(); // 請選擇 你要使用哪一張英偉達顯示卡
+        // 再來做判斷選擇是否要開啟一些主流功能?
+        // 再來儲存設定檔，運行Stable Diffusion
+    },
+    getCUDAlist: async function(){
+        return new Promise(async (resolve, reject) => {
+            exec('nvidia-smi', function (error, stdout, stderr) {
+                if(error){
+                  console.error("[GPU-INFO ERROR] " + error);
+                  console.log(`GPU: I guess is AMD or Intel GPU...`);
+                  resolve(false);
+                  return; 
                 }
+                // v2
+                temp = [];
+                result = [];
+                for (let x of stdout.trim().split('\n')){
+                    if(x.match(/\|( )+([0-9]+)( )+([\w \-_]+)/ig))
+                        temp.push(x.match(/\|( )+([0-9]+)( )+([\w \-_]+)/ig));
+                }
+            
+                for(let i = 0; i < temp.length; i++)
+                    temp[i] = temp[i][0].substring(1).trim();
+            
+                temp.forEach(arr => {
+                    if(!arr.match(/^0( )+N$/ig))
+                       result.push(arr.split('  ').slice(0,2).at(-1))
+                });
+                // console.log(result);
+                resolve(result);
             });
         });
+
+    },
+    gpu_detect: async function(){
+        console.log("正在尋找此電腦硬體持有的CUDA顯卡中...");
+        // await check.gpu().then((value) => {
+        //     console.log(color("yellow"), `[WARN]以下是簡單測試你的顯示卡是否持有相關浮點數運算功能，顯卡是否支援詳細還是需要您至techpowerup.com 查看您當前的型號是否確認持有，二次確認!`);
+        //     console.log(color("yellow"),`[GPU  X] Find ${value.length} GPU(s)`);
+
+        //     let data = value.map((x, index) => {
+        //         // gpulist.push(`${x.model} ${x.vram} GB`)
+        //         // 判別此型號或是系列是否支援 FP16 FP32 FP64 是否持有
+        //         console.log(`[${index}] ${x.model} - ${x.vram} GB`);
+        //         if(x.model.includes('GeForce GTX 9') || x.model.includes('Tesla M') ) {
+        //             console.log(color("yellow"), `此系列顯卡缺少 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更新顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
+        //         }else if (x.model.includes('GeForce GTX 16')) {
+        //             console.log(color("yellow"), `此系列顯卡可能 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更新顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
+        //         }else if (x.model.includes('GeForce GTX 10') || x.model.includes('GeForce RTX 20') || x.model.includes('GeForce RTX 30') || x.model.includes('GeForce RTX 40')) {
+        //             console.log(color("green"), `支援所有 FP16 FP32 FP64 浮點數運算，是否開啟 xformers 加速繪圖製作?`);
+        //         }else if (x.model.includes('Tesla K40') || x.model.includes('Tesla K80') || x.model.includes('Tesla P100') || x.model.includes('Tesla V100')) {
+        //             console.log(color("green"), `支援所有 FP16 FP32 FP64 浮點數運算，是否開啟 xformers 加速繪圖製作?`);
+        //         }else {
+        //             // console.log(color("red"), `Cannot determine floating point capabilities for this GPU.`);
+        //             console.log(color("red"), `無法確定此 GPU 的浮點功能。 尚無判別: GeForce GTX 9 以前的版本、quadro系列、AMD、內顯、Intel Arc系列`);
+        //             console.log(color("red"), `軟體無法辨識的顯卡是否支援浮點運算功能，詳細需要您至techpowerup.com 查看您當前的型號是否確認持有!`);
+        //         }
+        //     });
+        // });
     },
     prepare: function(){
         $.vcr();
@@ -146,6 +185,7 @@ const $ = {
         config.set("lastrunstatus", lastrunstatus);
     },
     main_last: async function(){
+        // Read sd config > prepare > run bat execsync > if better stable diffusion dead will close too.
         console.log("讀取最後一次的設定檔中....");
         // try to read last config/command_args.txt is have commandline or file is exists?
         let re = $.read_sd_config();
@@ -160,3 +200,13 @@ const $ = {
 }
 
 module.exports = $;
+
+// 測試的參數在 Windows 11 pro 剛裝下去
+// @echo off
+
+// set PYTHON=C:\Users\Yomisana\Desktop\bin\stable-diffusion-webui\venv\Scripts\python.exe
+// set GIT=C:\Users\Yomisana\Desktop\bin\git\cmd\
+// set VENV_DIR=venv
+// set COMMANDLINE_ARGS= --skip-torch-cuda-test
+
+// call webui.bat
