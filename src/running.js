@@ -59,6 +59,43 @@ const $ = {
         });
         console.log("Finished VC Redist check & install")
     },
+    // GPU Part
+    getCUDAlist: async function(){
+        return new Promise(async (resolve, reject) => {
+            exec('nvidia-smi', function (error, stdout, stderr) {
+                if(error){
+                  console.error("[GPU-INFO ERROR] " + error);
+                  console.log(`GPU: I guess is AMD or Intel GPU...`);
+                  resolve(false);
+                  return; 
+                }
+                // v2
+                if(app_dev){
+                    str = debug.str.nvidia_smi;
+                    // str = stdout;
+                }else{
+                    str = stdout;
+                }
+
+                temp = [];
+                result = [];
+                for (let x of str.trim().split('\n')){
+                    if(x.match(/\|( )+([0-9]+)( )+([\w \-_]+)/ig))
+                        temp.push(x.match(/\|( )+([0-9]+)( )+([\w \-_]+)/ig));
+                }
+            
+                for(let i = 0; i < temp.length; i++)
+                    temp[i] = temp[i][0].substring(1).trim();
+            
+                temp.forEach(arr => {
+                    if(!arr.match(/^0( )+N$/ig))
+                       result.push(arr.split('  ').slice(0,2).at(-1))
+                });
+                // console.log(result);
+                resolve(result);
+            });
+        });
+    },
     main: async function(){
         let re = $.read_sd_config();
         if(re === `nofile` || re === false){
@@ -113,42 +150,37 @@ const $ = {
     basic_settings_sd: async function(){
         // gpu part settings > prepare > run bat execsync > if better stable diffusion dead will close too.
         // $.gpu_detect();
-        gpulist = await $.getCUDAlist();
+        // 拿到Nvidia-smi 顯卡清單後 讓使用者開始選擇，預設自動選擇 0號當作顯卡，還是要指定? > 選擇完後檢查單前顯卡可使用的浮點運算 > 再來準備主流功能是否要啟動?
+        let gpulist = await $.getCUDAlist();
         console.log(color("yellow"),`Find ${gpulist.length} GPU`);
-        console.log(gpulist);
+        // console.log(gpulist);
+        let choosecard = await $.choosegpu(gpulist);
         // await $.chooseGPU(); // 請選擇 你要使用哪一張英偉達顯示卡
         // 再來做判斷選擇是否要開啟一些主流功能?
         // 再來儲存設定檔，運行Stable Diffusion
     },
-    getCUDAlist: async function(){
-        return new Promise(async (resolve, reject) => {
-            exec('nvidia-smi', function (error, stdout, stderr) {
-                if(error){
-                  console.error("[GPU-INFO ERROR] " + error);
-                  console.log(`GPU: I guess is AMD or Intel GPU...`);
-                  resolve(false);
-                  return; 
-                }
-                // v2
-                temp = [];
-                result = [];
-                for (let x of stdout.trim().split('\n')){
-                    if(x.match(/\|( )+([0-9]+)( )+([\w \-_]+)/ig))
-                        temp.push(x.match(/\|( )+([0-9]+)( )+([\w \-_]+)/ig));
-                }
-            
-                for(let i = 0; i < temp.length; i++)
-                    temp[i] = temp[i][0].substring(1).trim();
-            
-                temp.forEach(arr => {
-                    if(!arr.match(/^0( )+N$/ig))
-                       result.push(arr.split('  ').slice(0,2).at(-1))
-                });
-                // console.log(result);
-                resolve(result);
-            });
+    choosegpu: async function(gpulist){
+        // let choices_list = gpulist;
+        let choices_list = gpulist.map((gpuName, index) => ({
+            name: gpuName,
+            value: index
+        }));
+        inquirer.prompt([
+            {
+            type: 'list',
+            name: 'choice',
+            message: `${i.__('Please choose which one gpu you wanna using')}:`,
+            // choices: [
+            //     choices_list
+            // ]
+            choices: choices_list
+            }
+        ]).then(function(answers) {
+            // console.log(answers.choice)
+            // console.log(JSON.stringify(choices_list))
+            console.log(`You selected GPU [${answers.choice}] ${choices_list[answers.choice].name}`);
+            app_gpu = answers.choice;
         });
-
     },
     gpu_detect: async function(){
         console.log("正在尋找此電腦硬體持有的CUDA顯卡中...");

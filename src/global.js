@@ -32,7 +32,6 @@ global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/relea
 global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
 global.displaylang = null;
 global.lastrunstatus = null;
-// global.gpulist = null;
 global.app_title = "Better Stable Diffusion"
 global.app_name = "Better Stable Diffusion"
 global.app_version = {
@@ -50,6 +49,7 @@ global.app_location = {
 }
 global.app_dev = false;
 
+global.app_gpu = 0;
 
 global.d_value = {
     // Stable Diffusion Webui
@@ -94,6 +94,39 @@ global.hardware = {
         disk: false,
     },
 }
+
+
+// debug
+global.debug = {
+    str: {
+        nvidia_smi : `
+        Tue Apr 25 11:20:53 2023
+        +---------------------------------------------------------------------------------------+
+        | NVIDIA-SMI 531.68                 Driver Version: 531.68       CUDA Version: 12.1     |
+        |-----------------------------------------+----------------------+----------------------+
+        | GPU  Name                      TCC/WDDM | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+        | Fan  Temp  Perf            Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+        |                                         |                      |               MIG M. |
+        |=========================================+======================+======================|
+        |   0  NVIDIA GeForce GTX 1660 Ti    WDDM | 00000000:09:00.0  On |                  N/A |
+        | 28%   35C    P8                9W / 120W|   2134MiB /  6144MiB |     22%      Default |
+        |                                         |                      |                  N/A |
+        +-----------------------------------------+----------------------+----------------------+
+        |   1  Tesla M40 24GB                WDDM | 00000000:01:00.0 Off |                  Off |
+        | N/A   36C    P8              20W / 250W |    195MiB / 24576MiB |      1%      Default |
+        |                                         |                      |                  N/A |
+        +-----------------------------------------+----------------------+----------------------+
+        
+        +---------------------------------------------------------------------------------------+
+        | Processes:                                                                            |
+        |  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+        |        ID   ID                                                             Usage      |
+        |=======================================================================================|
+        |  Not running processes found                                                          |
+        +---------------------------------------------------------------------------------------+`
+    }
+}
+
 
 
 // Function

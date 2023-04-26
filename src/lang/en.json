@@ -57,6 +57,7 @@
     "keep create new one": "keep create new one",
     "Cancel back menu": "Cancel back menu",
     "Created directory": "Created directory",
+    "Please choose which one gpu you wanna using": "Please choose which one gpu you wanna using",
     "already exists and hash matches.": "already exists and hash matches.",
     "already exists but hash does not match, redownloading...": "already exists but hash does not match, redownloading...",
     "default": "default"
