@@ -328,7 +328,7 @@ const $ = {
         console.log(`Start run Stable Diffusion...`)
         let python = `set PYTHON = ${targetBinPath}\\stable-diffusion-webui\\venv\\Scripts\\python.exe`
         let git = `set GIT = ${targetBinPath}\\git\\cmd\\`
-        let batch = `@echo off && chcp 950 && ${python} && ${git} && set COMMANDLINE_ARGS= ${re} && cd ${targetBinPath}\\stable-diffusion-webui\\ && call webui.bat`;
+        let batch = `@echo off && title Stable Diffusion Console && chcp 950 && ${python} && ${git} && set COMMANDLINE_ARGS= ${re} && cd ${targetBinPath}\\stable-diffusion-webui\\ && call webui.bat`;
         // 創建一個新的命令提示字元(cmd)視窗
         const cmd = execSync(`start cmd /k "${batch}"`, (error, stdout, stderr) => {
             if (error) {
