@@ -317,32 +317,50 @@ const $ = {
     // 上方為已完成不要在動他了
     // 下方未完成
     sd: async function(){
-        console.log(`Ready Running Stable Diffusion...`)
+        console.log(`Ready run Stable Diffusion...`)
         // read file to get args
         let re = await $.read_sd_config();
-        const env = Object.assign({}, process.env, {
-          PYTHON: `${targetBinPath}\\stable-diffusion-webui\\venv\\Scripts\\python.exe`,
-          GIT: `${targetBinPath}\\git\\cmd\\`,
-          VENV_DIR: 'venv',
-          COMMANDLINE_ARGS: re,
+        // let env = Object.assign({}, process.env, {
+        //   PYTHON: `${targetBinPath}\\stable-diffusion-webui\\venv\\Scripts\\python.exe`,
+        //   GIT: `${targetBinPath}\\git\\cmd\\git.exe`,
+        //   COMMANDLINE_ARGS: re,
+        // });
+        console.log(`Start run Stable Diffusion...`)
+        let python = `set PYTHON = ${targetBinPath}\\stable-diffusion-webui\\venv\\Scripts\\python.exe`
+        let git = `set GIT = ${targetBinPath}\\git\\cmd\\`
+        let batch = `@echo off && chcp 950 && ${python} && ${git} && set COMMANDLINE_ARGS= ${re} && cd ${targetBinPath}\\stable-diffusion-webui\\ && call webui.bat`;
+        // 創建一個新的命令提示字元(cmd)視窗
+        const cmd = execSync(`start cmd /k "${batch}"`, (error, stdout, stderr) => {
+            if (error) {
+            console.error(`exec error: ${error}`);
+            return;
+            }
+            console.log(`stdout: ${stdout}`);
+            console.error(`stderr: ${stderr}`);
         });
+        menu.status();
         
-        const child = execSpawn('cmd.exe', [`/c ${targetBinPath}\\stable-diffusion-webui\\webui.bat`], {
-          cwd: `${targetBinPath}\\stable-diffusion-webui\\`,
-          env: env,
-        });
+        // 監聽 'exit' 事件，當視窗關閉時，結束進程
+        // cmd.on('exit', (code) => {
+        //     console.log(`子進程已退出，退出碼: ${code}`);
+        // });
         
-        child.stdout.on('data', (data) => {
-          console.log(`[INFO]: ${data}`);
-        });
+        // const child = execSpawn('cmd.exe', [`/c ${targetBinPath}\\stable-diffusion-webui\\webui.bat`], {
+        //   cwd: `${targetBinPath}\\stable-diffusion-webui\\`,
+        //   env: env,
+        // });
         
-        child.stderr.on('data', (data) => {
-          console.error(`[ERROR]: ${data}`);
-        });
+        // child.stdout.on('data', (data) => {
+        //   console.log(`[INFO]: ${data}`);
+        // });
         
-        child.on('exit', (code, signal) => {
-          console.log(`子程序退出，錯誤碼 ${code}，訊號 ${signal}`);
-        });
+        // child.stderr.on('data', (data) => {
+        //   console.error(`[ERROR]: ${data}`);
+        // });
+        
+        // child.on('exit', (code, signal) => {
+        //   console.log(`子程序退出，錯誤碼 ${code}，訊號 ${signal}`);
+        // });
 
         // 測試的參數在 Windows 11 pro 剛裝下去
         // @echo off
