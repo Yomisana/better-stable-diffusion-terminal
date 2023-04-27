@@ -62,7 +62,7 @@ const $ = {
                 })
             }).catch(() => {
                 console.log('You pressed CTRL+C')
-                menu.main();
+                menu.status();
             })
             resolve()
         })

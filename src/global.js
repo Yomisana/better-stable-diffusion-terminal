@@ -9,6 +9,7 @@ global.osinfo = require('systeminformation');
 global.pressAnyKey = require('press-any-key');
 global.exec = require('child_process').exec;
 global.execSync = require('child_process').execSync;
+global.execSpawn = require('child_process').spawn;
 global.request = require('request');
 global.crypto = require('crypto');
 global.process = require('process');
@@ -31,7 +32,6 @@ global.repoUrl = "https://api.github.com/repos/yomisana/better-stable-diffusion/
 global.repoUrl_file = "https://github.com/Yomisana/better-stable-diffusion/releases/latest/download/Better-Stable-Diffusion.exe";
 global.repoUrl_update_file = "https://github.com/Yomisana/better-stable-diffusion/releases/download/0.0.0/update.bat";
 global.displaylang = null;
-global.lastrunstatus = null;
 global.app_title = "Better Stable Diffusion"
 global.app_name = "Better Stable Diffusion"
 global.app_version = {
@@ -58,7 +58,8 @@ global.d_value = {
     sdwurl: "https://github.com/AUTOMATIC1111/stable-diffusion-webui/archive/refs/heads/master.zip",
     default_pyurl: `https://www.python.org/ftp/python/version/python-version-embed-amd64.zip`,
     default_pyver: `3.10.6`,
-    giturl: `https://github.com/git-for-windows/git/releases/latest/download/PortableGit-2.40.0-64-bit.7z.exe`,
+    // giturl: `https://github.com/git-for-windows/git/releases/download/v2.40.1.windows.1/PortableGit-2.40.1-64-bit.7z.exe`,
+    // giturl: `https://github.com/git-for-windows/git/releases/latest/download/Better-Stable-Diffusion.exe`,
     zipurl: `https://www.7-zip.org/a/7zr.exe`,
     vc_redisturl: `https://aka.ms/vs/16/release/vc_redist.x64.exe`,
     dev_temp: `${process.cwd()}\\better-stable-diffusion\\temp`,
@@ -314,7 +315,7 @@ global.extract = async function(filename, target_path, output_path, value){
             console.log(color("blue"), `${i.__('Done Extract')}! ${filename}...`);
         }else{
             console.log("None - extract command");
-            menu.main();
+            menu.status();
         }
     } catch (err) {
         // handle any errors

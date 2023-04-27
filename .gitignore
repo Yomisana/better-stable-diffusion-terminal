@@ -2,9 +2,13 @@
 node_modules
 package-lock.json
 # reop don't upload folder or file
-bin
-dist
-better-stable-diffusion
-dist
+# stable diffusion
 config
+bin
+temp
+# build app
+dist
+# stable diffusion dev
+better-stable-diffusion
+# stable diffusion else
 skill.md

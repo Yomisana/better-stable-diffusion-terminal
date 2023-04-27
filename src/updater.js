@@ -1,5 +1,5 @@
 const $ = {
-    checkForUpdates: function(){
+    checkForUpdates: async function(){
         app_version.current = app.version
         cmd.title(app_title, `${i.__('Check Update')}`);
         console.log(`${i.__('Check Update')}`);
@@ -8,7 +8,7 @@ const $ = {
             'User-Agent': 'Better-Stable-Diffusion/v1'
         };
         
-        request({ url: repoUrl, headers }, (error, response, body) => {
+        await request({ url: repoUrl, headers }, (error, response, body) => {
             if (error) {
                 console.error(error);
             } else {
@@ -17,10 +17,12 @@ const $ = {
                 app_version.latest = latestVersion;
                 console.log(`${i.__('Latest Version')}`, latestVersion);
                 $.update($.compareVersions(app_version.current,app_version.latest));
+                // $.update($.compareVersions(app_version.current, undefined));
             }
         });
     },
     compareVersions: function(current, latest){
+      try {
         const v1 = current.split('.').map(Number);
         const v2 = latest.split('.').map(Number);
         for (let i = 0; i < 3; i++) {
@@ -31,6 +33,10 @@ const $ = {
           }
         }
         return 0;
+      } catch (error) {
+        console.error(error);
+        console.log(`skip this time check update...`)
+      }
     },
     update: async function(result){
       if (result < 0) {

@@ -7,15 +7,16 @@ const $ = {
         await $.python(pyver);
 
         await $.git();
-        await $.zip();
+        // await $.zip();
         await $.vc_redist();
-        pressAnyKey(`${i.__('pressAnyKey')}`, {
-            ctrlC: "reject"
-        }).then(async () => {
-            cmd.clear(); await ascii_art("red", app_name);        menu.status();
-        }).catch(() => {
-            console.log('You pressed CTRL+C');        menu.status();
-        })
+        // pressAnyKey(`${i.__('pressAnyKey')}`, {
+        //     ctrlC: "reject"
+        // }).then(async () => {
+        //     cmd.clear(); await ascii_art("red", app_name);        menu.status();
+        // }).catch(() => {
+        //     console.log('You pressed CTRL+C');        menu.status();
+        // })
+        menu.status();
     },
     sd_core: async function(sdurl){
         // 下載 AUTOMATIC1111 / stable-diffusion-webui
@@ -89,7 +90,7 @@ const $ = {
             // python get-pip.py
             // python -m pip install --upgrade pip
             cmd.title(app_title, `Python => pip Installing...`);
-            const { execSync } = require('child_process');
+            // const { execSync } = require('child_process');
             // 執行 get-pip.py
             console.log(color("blue"),`python pip install...`)
             execSync(`${targetBinPath}\\python\\python.exe ${targetBinPath}\\python\\get-pip.py`);
@@ -113,10 +114,61 @@ const $ = {
         }
     },
     git: function(){
-        // const targetPath = app_dev ? d_value.dev_temp : d_value.temp;
-        // const targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
         return new Promise(async (resolve, reject) => {
-            await downloadData(d_value.giturl, path.join(targetPath));
+            // get git_url
+            let url = await $.git_url();
+            // download git
+            await downloadData(url, path.join(targetPath));
+            // unzip git to bin
+            let name = path.basename(url);
+            // console.log(`name: ${name}`)
+            console.log(color("yellow"),`跳出一個解壓縮的視窗不必驚慌，這個是git解壓縮視窗!`)
+            await $.git_unzip(name);
+            resolve();
+        })
+    },
+    git_url: function(){
+        return new Promise(async (resolve, reject) => {
+            // request version
+            // https://github.com/git-for-windows/git/releases/download/v2.40.1.windows.1/PortableGit-2.40.1-64-bit.7z.exe
+            let repoUrl = 'https://api.github.com/repos/git-for-windows/git/releases/latest';
+            let tag_name  = null;
+            let version = null;
+            let giturl  = null;
+            let options = {
+                url: repoUrl,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0' // GitHub API requires a user agent header
+                }
+            };
+
+            request(options, (error, response, body) => {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+
+                let release = JSON.parse(body);
+                tag_name = release.tag_name;
+                // console.log(release.tag_name);
+                version = release.tag_name.match(/(\d+\.\d+\.\d+)/)[0];
+                // console.log(version);
+                giturl = `https://github.com/git-for-windows/git/releases/download/${tag_name}/PortableGit-${version}-64-bit.7z.exe`;
+                console.log(giturl)
+                resolve(giturl)
+            });
+        })
+    },
+    git_unzip: function(name){
+        return new Promise(async (resolve, reject) => {
+            // // get git_url
+            // let url = await $.git_url();
+            // // download git
+            // await downloadData(url, path.join(targetPath));
+            // // unzip git to bin
+            // await $.git_unzip();
+            // execSync(`${targetPath}\\python\\python.exe -m pip install virtualenv`);
+            execSync(`${targetPath}\\${name} -o "${targetBinPath}\\git" -y`);
             resolve();
         })
     },
@@ -134,6 +186,20 @@ const $ = {
         return new Promise(async (resolve, reject) => {
             await downloadData(d_value.vc_redisturl, path.join(targetPath));
             resolve();
+        })
+    },
+    check: async function(){
+        return new Promise(async (resolve) => {
+            // request
+            const folderPath = `${targetBinPath}`;
+
+            if (fs.existsSync(folderPath)) {
+                resolve(true);
+                console.log('Folder exists');
+            } else {
+                resolve(false);
+                console.log('Folder does not exist');
+            }
         })
     }
 }
