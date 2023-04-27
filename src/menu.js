@@ -75,7 +75,7 @@ const $ = {
             choices: [
                 `${i.__('Run Stable Diffusion Last Status')}`,
                 `${i.__('Run Stable Diffusion')}`,
-                `X${i.__('Manual Install Model URL')}`,
+                // `X${i.__('Manual Install Model URL')}`,
                 `${i.__('Install Stable Diffusion')}`,
                 `${i.__('Check System what settings recommended of My PC')}`,
                 `${i.__('Settings')}`,

@@ -20,13 +20,16 @@
 ## 特色
 - 自動更新軟體
   - 啟動時檢查更新 Better Stable Diffusion
+- 終端機文字介面選單
 - 安裝 AUTOMATIC1111/stable-diffusion-webui
-  - 免安裝 Python: 不需要再安裝! 安裝版本的 Python 不干擾你的系統先前持有或是不想安裝Python
-- [X]執行 AUTOMATIC1111/stable-diffusion-webui
-  - [X]免安裝 Git: 不需要再安裝! 安裝版本的 Python 不干擾你的系統!
-    - [X]需要的依賴: 7zip
-  - [X]啟動時設定此啟動附帶參數
-    - [X]可以記憶在`config.json`上
+  - 免安裝 Python: 不需要安裝在系統上! 安裝版本的 Python 不干擾你的系統先前持有或是不想安裝Python
+    - 支援選擇 3.10.6 ~ 3.10.11
+  - 免安裝 Git: 不需要安裝在系統上!
+- Stable Diffusion啟動參數可以自訂義
+- 檢查電腦硬體設備資訊 
+- 執行 AUTOMATIC1111/stable-diffusion-webui
+  - 啟動時設定此啟動附帶參數
+    - 可以記憶在`command_args.txt`上
 - [X]瀏覽器擴充插件自動掛勾下載模型
   - [X]頁面上監聽模型資源網站上的版本與類型，選擇好後直接下載到執行中的Better Stable Diffusion的軟體路徑上的 Stable Diffsuion 上
 - [X]可以偵測當前環境是否移動到另外一台電腦上進行額外修改
@@ -34,11 +37,10 @@
 - [X]檢查路徑是否為純英文路徑
   - [X]看起來這部分好像沒有問題
 - 軟體額外指令
-  - `--dev`:執行檔目錄下創建一個 `better-stable-diffusion`資料夾把所有相關產生的資料夾存放在此資料夾底下。
+  - `--dev`:執行檔目錄下創建一個 `better-stable-diffusion`資料夾把所有相關產生的資料夾存放在此資料夾底下。(可能會有BUG!)
 - 全球性語言
   - 中文
   - 英文
-- 終端機可以用選單的方式簡單操作
 
 ## 展現你對我們的支持
 
