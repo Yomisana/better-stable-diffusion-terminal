@@ -273,9 +273,10 @@ const $ = {
         // console.log(color("yellow"),`port:${port}`)
         // console.log(color("yellow"),`Dark theme:${default_theme}`)
         let args = [];
-        if (result.id) {
-            args.push(`--device-id ${result.id}`);
-        }
+        // if (result.id) {
+        //     args.push(`--device-id ${result.id}`);
+        // }
+        args.push(`--device-id ${result.id}`);
         if (result.fp16) {
             args.push(`--precision full --no-half`);
         }
