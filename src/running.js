@@ -140,7 +140,7 @@ const $ = {
             }else if (temp.includes('GeForce GTX 16')) {
                 console.log(color("yellow"), `此系列顯卡可能 FP16 會出現問題，如果無法輸出圖片 可以嘗試讓Stable Diffusion強制 FP16 轉換成 FP32 做運算，或是更換顯卡至GeForce GTX 10系列或更高級別系列的顯卡`);
                 resolve({ fp16: true, xformers: false, id:id});
-            }else if (temp.includes('GeForce GTX 10') || temp.includes('GeForce RTX 20') || temp.includes('GeForce RTX 30') || temp.includes('GeForce RTX 40') || temp.includes('Tesla K40') || temp.includes('Tesla K80') || temp.includes('Tesla P100') || temp.includes('Tesla V100')) {
+            }else if (temp.includes('GeForce GTX 10') || temp.includes('GeForce RTX 20') || temp.includes('GeForce RTX 30') || temp.includes('GeForce RTX 40')) {
                 console.log(color("green"), `支援所有 FP16 FP32 FP64 浮點數運算，是否開啟 xformers 加速繪圖製作?`);
                 resolve({ fp16: true, xformers: true, id:id});
             }else {
@@ -149,6 +149,9 @@ const $ = {
                 console.log(color("red"), `軟體無法辨識的顯卡是否支援浮點運算功能，詳細需要您至techpowerup.com 查看您當前的型號是否確認持有!`);
                 resolve({ fp16: false, xformers: false, id:id});
             }
+
+            // || temp.includes('Tesla P100') || temp.includes('Tesla V100')
+            // Tesla 系列: K(no FP16) > M(no FP16) > P(FP16) > V > T > RTX A40 && A100
         });
     },
     basic_gpu_settings: async function(){

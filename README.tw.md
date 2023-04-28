@@ -27,6 +27,10 @@
   - 免安裝 Git: 不需要安裝在系統上!
 - Stable Diffusion啟動參數可以自訂義
 - 檢查電腦硬體設備資訊 
+- 基本檢測
+  - 檢測型號是否支援 FP16 半精度浮點數
+    - 支援檢查 Geforce GTX 9,GTX 10,GTX 16,RTX 20,RTX 30,RTX 40系列
+  - [X]檢測顯存大小是否超過 6G(建議至少)、 8G(建議)
 - 執行 AUTOMATIC1111/stable-diffusion-webui
   - 啟動時設定此啟動附帶參數
     - 可以記憶在`command_args.txt`上
