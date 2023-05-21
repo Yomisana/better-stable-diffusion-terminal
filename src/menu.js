@@ -17,11 +17,11 @@ const $ = {
             switch (answers.choice) {
                 case 'English':
                     // console.log(`[*] English...`);
-                    config.set("displaylang", "en");displaylang = "en";i.setLocale(displaylang);
+                    config.set("display lang", "en");displaylang = "en";i.setLocale(displaylang);
                     break;
                 case 'Chinese':
                     // console.log(`[*] Chinese...`);
-                    config.set("displaylang", "tw");displaylang = "tw";i.setLocale(displaylang);
+                    config.set("display lang", "tw");displaylang = "tw";i.setLocale(displaylang);
                     break;
                 case 'Exit':
                     close();
@@ -211,8 +211,8 @@ const $ = {
     input: async function(message, value){
         let answers = await inquirer.prompt([
             {
-              name: 'value',
-              message: `${message}:`
+                name: 'value',
+                message: `${message}:`
             }
         ]);
         if (!answers.value) {
@@ -220,7 +220,18 @@ const $ = {
         }
 
         return answers.value;
-    }
+    },
+    boolean: async function(message){
+        let answers = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'confirm',
+                message: `${message}:`
+            }
+        ]);
+        // console.log(answers.confirm);
+        return answers.confirm;
+    }, 
 }
 
 const settings = {
@@ -234,13 +245,17 @@ const settings = {
             message: `${i.__('Please choose what you wanna do?')}:`,
             choices: [
                 `${i.__('Back')}`,
-                `${i.__('Display Language')}`,
+                `${i.__('displaylanguage')}`,
+                `${i.__('Hide Console Window')}`,
             ]
             }
         ]).then(function(answers) {
             switch (answers.choice) {
-                case `${i.__('Display Language')}`:
+                case `${i.__('displaylanguage')}`:
                     settings.lang_menu();
+                    break;
+                case `${i.__('Hide Console Window')}`:
+                    settings.hcw_menu();
                     break;
                 case `${i.__('Back')}`:
                     $.status();
@@ -267,11 +282,11 @@ const settings = {
         ]).then(function(answers) {
             switch (answers.choice) {
                 case 'English':
-                    config.set("displaylang", "en");displaylang = "en";i.setLocale(displaylang);
+                    config.set("display lang", "en");displaylang = "en";i.setLocale(displaylang);
                     settings.menu();
                     break;
                 case 'Chinese':
-                    config.set("displaylang", "tw");displaylang = "tw";i.setLocale(displaylang);
+                    config.set("display lang", "tw");displaylang = "tw";i.setLocale(displaylang);
                     settings.menu();
                     break;
                 case `${i.__('Back')}`:
@@ -281,6 +296,13 @@ const settings = {
                     break;
             }
         });
+    },
+    hcw_menu: async function(){
+        cmd.clear(); await ascii_art("yellow", "Hide Console Window");
+        console.log(`${i.__('Hide Console Window Status')}: ${config.get("hide console window")}`);
+        let data = await menu.boolean(`${i.__('Enable Hide Console Window')}`);
+        config.set("hide console window", data);
+        settings.menu();
     }
 }
 

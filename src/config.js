@@ -2,7 +2,8 @@ const $ = {
     default: function(){
         // 設定預設值
         nconf.defaults({
-            firstrun: true
+            "first run": true,
+            "hide console window": true
         });
     },
     load: function(){

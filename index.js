@@ -5,9 +5,9 @@ app_version.current = app.version
 // app settings
 config.load()
     .then(debug())
+    // .then(updater.checkForUpdates())
     // .then(console.log(targetPath))
     // .then(console.log(targetBinPath))
-    .then(updater.checkForUpdates())
     // .then(init());
 
 async function debug(){
@@ -22,6 +22,7 @@ async function debug(){
     });
     targetPath = app_dev ? d_value.dev_temp : d_value.temp;
     targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
+    updater.checkForUpdates();
     // await install.git();
     // let url = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
     // await downloadData(`${url}`, path.join(`${d_value.temp}`));
@@ -34,21 +35,21 @@ async function debug(){
 // async function init(){
 //     await ascii_art("yellow",app_name);
 //     // active
-//     firstrun = config.get("firstrun");
-//     if(firstrun === undefined){
+//     first run = config.get("first run");
+//     if(first run === undefined){
 //         config.default();
-//         firstrun = config.get("firstrun");
+//         first run = config.get("first run");
 //     }
-//     if(firstrun){
+//     if(first run){
 //         menu.welcome();
-//         config.set("firstrun", false);
+//         config.set("first run", false);
 //     }else{
-//         displaylang = config.get("displaylang")
+//         displaylang = config.get("display lang")
 //         if(displaylang === undefined){
 //             displaylang = "en";
-//             config.set("displaylang", displaylang);
+//             config.set("display lang", displaylang);
 //         }
-//         i.setLocale(config.get("displaylang"));
+//         i.setLocale(config.get("display lang"));
 //         menu.main();
 //     }
 // }
@@ -59,21 +60,23 @@ const $ = {
         cmd.title(app_title, `waiting...`);
         await ascii_art("yellow",app_name);
         // active
-        firstrun = config.get("firstrun");
+        firstrun = config.get("first run");
         if(firstrun === undefined){
             config.default();
-            firstrun = config.get("firstrun");
+            firstrun = config.get("first run");
         }
         if(firstrun){
             menu.welcome();
-            config.set("firstrun", false);
+            config.set("first run", false);
+            // first run settings
+            config.set("hide console window", true);
         }else{
-            displaylang = config.get("displaylang")
+            displaylang = config.get("display lang")
             if(displaylang === undefined){
                 displaylang = "en";
-                config.set("displaylang", displaylang);
+                config.set("display lang", displaylang);
             }
-            i.setLocale(config.get("displaylang"));
+            i.setLocale(config.get("display lang"));
             menu.status();
         }
     }

@@ -18,6 +18,7 @@ global.ProgressBar = require('progress');
 global.validator = require('validator');
 global.semver = require('semver');
 global.setTitle = require('console-title');
+global.consolewindow = require('node-hide-console-window');
 // Main Module
 global.i = require('./lang/i18n');
 global.config = require('./config');
@@ -152,6 +153,18 @@ global.cmd = {
     clear: function(){
         return new Promise((resolve, reject)=>{
             process.stdout.write('\x1B[2J\x1B[0f');
+            resolve();
+        });
+    },
+    show: function(){
+        return new Promise((resolve, reject)=>{
+            consolewindow.showConsole();
+            resolve();
+        });
+    },
+    hide: function(){
+        return new Promise((resolve, reject)=>{
+            consolewindow.hideConsole();
             resolve();
         });
     }

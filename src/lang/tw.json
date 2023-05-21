@@ -23,7 +23,7 @@
     "Settings": "設定",
     "Back": "返回",
     "url": "網址",
-    "Display Language": "顯示語言",
+    "displaylanguage": "顯示語言",
     "Please choose your laungue": "請選擇你要顯示的語言",
     "Manual Install Model URL": "手動安裝模型網址",
     "Download Model": "下載模型",
@@ -67,5 +67,9 @@
     "Enter you want listen port here": "輸入你要監聽的port",
     "already exists and hash matches.": "已經存在 並且 檔案完整正確.",
     "already exists but hash does not match, redownloading...": "已經存在 但是 檔案不完整. 重新下載...",
-    "default": "default"
+    "default": "default",
+    "Hide Console Window": "隱藏主視窗",
+    "Hide Console Window Status": "隱藏主視窗狀態",
+    "Enable Hide Console Window": "是否開啟隱藏主視窗狀態",
+    "default2": "default2"
 }

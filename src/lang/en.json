@@ -23,7 +23,7 @@
     "Settings": "Settings",
     "Back": "Back",
     "url": "url",
-    "Display Language": "Display Language",
+    "displaylanguage": "Display Language",
     "Please choose your laungue": "Please choose your laungue",
     "Manual Install Model URL": "Manual Install Model URL",
     "Download Model": "Download Model",
@@ -67,5 +67,9 @@
     "Enter you want listen port here": "Enter you want listen port here",
     "already exists and hash matches.": "already exists and hash matches.",
     "already exists but hash does not match, redownloading...": "already exists but hash does not match, redownloading...",
-    "default": "default"
+    "default": "default",
+    "Hide Console Window": "Hide Console Window",
+    "Hide Console Window Status": "Hide Console Window Status",
+    "Enable Hide Console Window": "Enable Hide Console Window",
+    "default2": "default2"
 }

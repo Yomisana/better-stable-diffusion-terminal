@@ -27,15 +27,18 @@ const $ = {
     },
     save_sd_config: async function(args){
         // 儲存設定檔
-        let filePath = `${app_location.file.command_args}`;
+        return new Promise(async (resolve, reject) => {
+            let filePath = `${app_location.file.command_args}`;
 
-        fs.writeFile(filePath, args, function (err) {
-            if (err) {
-                console.error("Write config file fail!", err);
-            } else {
-                console.log("Write config file done!");
-            }
-        });
+            fs.writeFile(filePath, args, function (err) {
+                if (err) {
+                    console.error("Write config file fail!", err);
+                } else {
+                    console.log("Write config file done!");
+                }
+            });
+            resolve();
+        })
     },
     // VCRedist
     vcr: async function(){
@@ -104,7 +107,7 @@ const $ = {
             
                 temp.forEach(arr => {
                     if(!arr.match(/^0( )+N$/ig))
-                       result.push(arr.split('  ').slice(0,2).at(-1))
+                        result.push(arr.split('  ').slice(0,2).at(-1))
                 });
                 // console.log(result);
                 resolve(result);
@@ -334,14 +337,23 @@ const $ = {
         let git = `set GIT = ${targetBinPath}\\git\\cmd\\`
         let batch = `@echo off && title Stable Diffusion Console && chcp 950 && ${python} && ${git} && set COMMANDLINE_ARGS= ${re} && cd ${targetBinPath}\\stable-diffusion-webui\\ && call webui.bat`;
         // 創建一個新的命令提示字元(cmd)視窗
-        const cmd = execSync(`start cmd /k "${batch}"`, (error, stdout, stderr) => {
+        console.log(color("yellow"),`Running Stable Diffusion...`)
+        if(config.get("hide console window")){
+            cmd.hide();
+        }
+        
+        const sd_process = execSync(`start cmd /k "${batch}"`, (error, stdout, stderr) => {
             if (error) {
-            console.error(`exec error: ${error}`);
+                cmd.show();
+                console.error(`exec error: ${error}`);
             return;
             }
             console.log(`stdout: ${stdout}`);
             console.error(`stderr: ${stderr}`);
         });
+        if(config.get("hide console window")){
+            cmd.show();
+        }
         menu.status();
         
         // 監聽 'exit' 事件，當視窗關閉時，結束進程
