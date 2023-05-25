@@ -20,11 +20,17 @@ const express = require('express');
 const app = express();
 const port = app_server.port;
 console.log(`[express] Starting... ${port} port online`)
-// 路由處理
+// // 路由處理
+// app.get('/', (req, res) => {
+//     // res.send('Hello, World!');
+//     const url = req.query.url;
+//     res.send(`Received URL: ${url}`);
+// });
 app.get('/', (req, res) => {
-    // res.send('Hello, World!');
     const url = req.query.url;
-    res.send(`Received URL: ${url}`);
+    console.log(`Received URL: ${url}`);
+    // res.send('Received the URL successfully');
+    // getModelDetails(url);
 });
 
 // 啟動服務器

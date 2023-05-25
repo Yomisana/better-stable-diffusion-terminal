@@ -83,7 +83,7 @@ const $ = {
             const newData = data.replace(/#import site/g, 'import site');
             fs.writeFileSync(`${targetBinPath}\\python\\python310._pth`, newData);
             console.log('The python310._pth has been updated!');
-           
+
             // start download pip
             let pip_url = `https://bootstrap.pypa.io/get-pip.py`
             await downloadData(pip_url,`${targetBinPath}\\python`);

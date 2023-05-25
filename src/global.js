@@ -219,92 +219,92 @@ global.downloadinfo = {
 // downloadData v3(Check Hash , --dev folder)
 global.downloadData = function(url, folderpath) {
     return new Promise(async (resolve, reject) => {
-      let name = path.basename(url);
-      const filepath = path.join(folderpath, name);
-  
-      try {
+        let name = path.basename(url);
+        const filepath = path.join(folderpath, name);
+
+        try {
         await fs.promises.mkdir(folderpath, { recursive: true });
         console.log(`${i.__('Created directory')}: ${folderpath}`);
-  
+
         if (fs.existsSync(filepath)) {
-          // if file exists, check if hash matches
-          const urlHash = await getHashFromUrl(url);
-          const fileHash = getHashFromFile(filepath);
-        //   console.log(`url hash: ${urlHash}`);
-        //   console.log(`file hash: ${fileHash}`);
-  
-          if (urlHash === fileHash) {
-            console.log(`${name} ${i.__('already exists and hash matches.')}`);
-            resolve('ok');
-            return;
-          }
-  
-          console.log(`${name} ${i.__('already exists but hash does not match, redownloading...')}`);
+            // if file exists, check if hash matches
+            const urlHash = await getHashFromUrl(url);
+            const fileHash = getHashFromFile(filepath);
+            // console.log(`url hash: ${urlHash}`);
+            // console.log(`file hash: ${fileHash}`);
+
+            if (urlHash === fileHash) {
+                console.log(`${name} ${i.__('already exists and hash matches.')}`);
+                resolve('ok');
+                return;
+            }
+
+            console.log(`${name} ${i.__('already exists but hash does not match, redownloading...')}`);
         }
-  
+
         console.log(`${i.__('Start Download')} ${name} | url: ${url}`);
         const req = request(url);
         const stream = req.pipe(fs.createWriteStream(filepath));
-  
+
         // progressBar v1
         let bar = new ProgressBar(`${i.__('Prepare to download')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`, { 
-          total: 10
+            total: 10
         }); 
     
         req.on('response',function(data){
-          downloadinfo.targetSize = parseInt(data.headers['content-length']);
+            downloadinfo.targetSize = parseInt(data.headers['content-length']);
         });
     
         req.on('data', function (chunk) {
-          downloadinfo.downloadedSize += chunk.length; 
-          bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
-          bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
-          if (bar.complete) {
-            console.log(`${i.__('complete!')} ${filepath}`);
-          }
+            downloadinfo.downloadedSize += chunk.length; 
+            bar.update(downloadinfo.downloadedSize/downloadinfo.targetSize, {});
+            bar.fmt = `${i.__('downloading')} [:bar]:percent ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} ETA(sec): :eta`;
+            if (bar.complete) {
+                console.log(`${i.__('complete!')} ${filepath}`);
+            }
         });
     
         stream.on('finish',function(){
-          resolve('ok');
+            resolve('ok');
         });
     
         stream.on('error',function(err){
-          reject(`stream error: ${err} in url ${url} at file ${filepath}`);
+            reject(`stream error: ${err} in url ${url} at file ${filepath}`);
         });
     
         function convertSize(size) {
-          const units = ['B', 'KB', 'MB', 'GB'];
-          let unitIndex = 0;
-          while(size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-          }
-          return `${size.toFixed(2)} ${units[unitIndex]}`;
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let unitIndex = 0;
+            while(size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            return `${size.toFixed(2)} ${units[unitIndex]}`;
         }
-  
+
         async function getHashFromUrl(url) {
-          const hash = crypto.createHash('sha256');
-  
-          return new Promise((resolve, reject) => {
+            const hash = crypto.createHash('sha256');
+
+            return new Promise((resolve, reject) => {
             request.get(url)
-              .on('error', err => reject(err))
-              .on('data', chunk => hash.update(chunk))
-              .on('end', () => resolve(hash.digest('hex')));
-          });
+                .on('error', err => reject(err))
+                .on('data', chunk => hash.update(chunk))
+                .on('end', () => resolve(hash.digest('hex')));
+            });
         }
-  
+
         function getHashFromFile(filepath) {
-          // calculate actual hash from file
-          const data = fs.readFileSync(filepath);
-          const hash = crypto.createHash('sha256');
-          hash.update(data);
-          return hash.digest('hex');
+            // calculate actual hash from file
+            const data = fs.readFileSync(filepath);
+            const hash = crypto.createHash('sha256');
+            hash.update(data);
+            return hash.digest('hex');
         }
-  
-      } catch (err) {
-        console.error(err);
-        reject();
-      }
+
+        } catch (err) {
+            console.error(err);
+            reject();
+        }
     });
 }
 
@@ -364,4 +364,49 @@ global.VCRedistInstalled = function(version) {
         // }
         return false;
     }
+}
+
+// 模型下載部分
+// 後端流程
+//  => 前端JSON回傳給我的有:
+//      選擇當前的
+//      (1)模型下載網址
+//      (2)圖片網址
+//      (3)模型的模型驗證碼
+//      (4)模型的類型是啥
+//      (5)模型的細節說明，此欄為: `${模型名稱}_${版本}_${作者名稱}_${作者}`
+//          => 然後在後端下載，下載的部分就是把要丟到哪一個資料夾底下先說好就直接下載在那邊。
+//              => 下載完後，在express的 /history
+//                                              /model(checkpoint)
+//                                              /lora
+//                                              /hypernetwork
+//                                              /Textual Inversion
+//                                              /LyCoris
+//                                              /Controlnet
+//                                              /VAE
+//              上丟上每個類別的 json 然後，把每個下載狀況儲存在本地
+//              如果再按下 BSD 時候就會判斷是否要在安排下載。
+// Example: checkpoint.json
+//      {
+//          {
+//              下方為 模型與圖片 資訊
+//              "type": "CHECKPOINT MERGE",
+//              "category": "CHECKPOINT",
+//              "name": "Perfect World 完美世界",
+//              "repo_url": "https://civitai.com/models/8281",
+//              "version": "v4 (Baked)",
+//              "version_repo_url": "https://civitai.com/models/8281?modelVersionId=77276",
+//              "current_download_url": "https://civitai.com/api/download/models/77276",
+//              "hash": "24A393500F15C3243A4212C2CEAB764E43F343D8442B0F4CEC430DAC6EA00ECB",
+//              "current_preview_url": "https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/fa8421b4-7feb-4c9d-a226-06d3b67358aa/preview.jpeg",
+//              下方為 模型細節
+//              "need_vae_model": false,
+//              "download_vae_model": false,
+//              "finished_download": true,
+//              "finished_download_date": "2023/05/26 00:27:30",
+//              "check_hash": true,
+//          }
+//      }
+global.ModelDownloadData = function(url){
+
 }

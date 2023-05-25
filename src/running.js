@@ -56,8 +56,8 @@ const $ = {
                 console.log(color("yellow"), `Name: Microsoft Visual C++ 2015-2019 Redistributable (x64) - 14.29.30139`)
                 execSync(`${targetPath}\\vc_redist.x64.exe /quiet /norestart /log ${targetPath}\\vcr14.0_logger\\vcr14.0.txt`, (error, stdout, stderr) => {
                     if (error) {
-                      console.error(`執行命令時出現錯誤： ${error}`);
-                      return;
+                        console.error(`執行命令時出現錯誤： ${error}`);
+                        return;
                     }
                     console.log(`stdout: ${stdout}`);
                     console.error(`stderr: ${stderr}`);
@@ -82,10 +82,10 @@ const $ = {
         return new Promise(async (resolve, reject) => {
             exec('nvidia-smi', function (error, stdout, stderr) {
                 if(error){
-                  console.error("[GPU-INFO ERROR] " + error);
-                  console.log(`GPU: I guess is AMD or Intel GPU...`);
-                  resolve(false);
-                  return; 
+                    console.error("[GPU-INFO ERROR] " + error);
+                    console.log(`GPU: I guess is AMD or Intel GPU...`);
+                    resolve(false);
+                    return; 
                 }
                 // v2
                 if(app_dev){
