@@ -66,7 +66,7 @@ const $ = {
         cmd.clear(); await ascii_art("yellow", app_name);
         cmd.title(app_title, `Lobby`);
         // console.log("At menu");
-        console.log(color("blue"),`App Version: ${app_version.current}`);
+        console.log(color("blue"),`App Version: ${app_version.current} Port: ${app_server.port}`);
         inquirer.prompt([
         {
             type: 'list',
@@ -118,7 +118,7 @@ const $ = {
         cmd.clear(); await ascii_art("yellow", app_name);
         cmd.title(app_title, `Lobby`);
         // console.log("At menu");
-        console.log(color("blue"),`App Version: ${app_version.current}`);
+        console.log(color("blue"),`App Version: ${app_version.current} Port: ${app_server.port}`);
         inquirer.prompt([
         {
             type: 'list',
@@ -165,7 +165,7 @@ const $ = {
         cmd.clear(); await ascii_art("yellow", app_name);
         cmd.title(app_title, `Lobby`);
         // console.log("At menu");
-        console.log(color("blue"),`App Version: ${app_version.current}`);
+        console.log(color("blue"),`App Version: ${app_version.current} Port: ${app_server.port}`);
         inquirer.prompt([
         {
             type: 'list',

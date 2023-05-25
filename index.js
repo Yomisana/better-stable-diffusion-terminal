@@ -1,4 +1,5 @@
 require('./src/global');
+require('./src/server');
 // env settings
 cmd.clear();cmd.title(app_title, "");
 app_version.current = app.version

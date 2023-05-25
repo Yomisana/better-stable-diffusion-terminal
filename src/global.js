@@ -49,6 +49,9 @@ global.app_location = {
     },
 }
 global.app_dev = false;
+global.app_server = {
+    port: 7858,
+};
 
 global.app_gpu = 0;
 
