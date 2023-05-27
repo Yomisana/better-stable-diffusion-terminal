@@ -10,6 +10,7 @@ bin
 temp
 # build app
 dist
+release_temp
 Better-Stable-Diffusion.exe
 # stable diffusion dev
 better-stable-diffusion

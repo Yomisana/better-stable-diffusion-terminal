@@ -18,7 +18,8 @@ global.ProgressBar = require('progress');
 global.validator = require('validator');
 global.semver = require('semver');
 global.setTitle = require('console-title');
-global.consolewindow = require('node-hide-console-window');
+// global.consolewindow = require('node-hide-console-window');
+global.consolewindow = "";
 // Main Module
 global.i = require('./lang/i18n');
 global.config = require('./config');
@@ -247,9 +248,8 @@ global.downloadData = function(url, folderpath) {
             const stream = req.pipe(fs.createWriteStream(filepath)); 
 
             req.on('response',function(data){
-                downloadinfo.targetSize = parseInt(data.headers['content-length'], 10);
-                console.log(`Size: ${downloadinfo.targetSize}`);
-                let bar = new ProgressBar(`${i.__('downloading')} [:bar] ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} :rate/bps :percent :etas`, {
+                downloadinfo.targetSize = parseInt(data.headers['content-length']);               
+                let bar = new ProgressBar(`:percent |:bar| ${convertSize(downloadinfo.targetSize)} :etas`, {
                     complete: '=',
                     incomplete: '-',
                     width: 10,
@@ -524,9 +524,8 @@ global.downloadModel = function(url, name, hash, folderpath) {
             const stream = req.pipe(fs.createWriteStream(filepath));
 
             req.on('response',function(data){
-                downloadinfo.targetSize = parseInt(data.headers['content-length'], 10);
-                console.log(`Size: ${downloadinfo.targetSize}`);
-                let bar = new ProgressBar(`${i.__('downloading')} [:bar] ${convertSize(downloadinfo.downloadedSize)}/${convertSize(downloadinfo.targetSize)} :rate/bps :percent :etas`, {
+                downloadinfo.targetSize = parseInt(data.headers['content-length']);               
+                let bar = new ProgressBar(`:percent |:bar| ${convertSize(downloadinfo.targetSize)} :etas`, {
                     complete: '=',
                     incomplete: '-',
                     width: 10,
