@@ -24,12 +24,15 @@ async function debug(){
     targetPath = app_dev ? d_value.dev_temp : d_value.temp;
     targetBinPath = app_dev ? d_value.dev_bin : d_value.bin;
     updater.checkForUpdates();
+
     // await install.git();
     // let url = await menu.input(`${i.__('Past url here')} (Github/AUTOMATIC1111/stable-diffusion-webui)`, d_value.sdw.url);
     // await downloadData(`${url}`, path.join(`${d_value.temp}`));
     // console.log("I am First");
     // const { exec } = require('child_process');
     // exec('start https://www.example.com');
+    // console.log(`DEBUG one function`)
+    // getModelDetails(`https://civitai.com/api/download/models/77276`);
 }
 
 
