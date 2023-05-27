@@ -36,7 +36,7 @@
 - 執行 AUTOMATIC1111/stable-diffusion-webui
   - 啟動時設定此啟動附帶參數
     - 可以記憶在`command_args.txt`上
-- [X]瀏覽器擴充插件自動掛勾下載模型
+- []瀏覽器擴充插件自動掛勾下載模型
   - [X]頁面上監聽模型資源網站上的版本與類型，選擇好後直接下載到執行中的Better Stable Diffusion的軟體路徑上的 Stable Diffsuion 上
 - [X]可以偵測當前環境是否移動到另外一台電腦上進行額外修改
   - [X]讓你的 venv 可以正常運行
