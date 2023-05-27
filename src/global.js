@@ -218,17 +218,59 @@ global.downloadinfo = {
 }
 
 // downloadData v3(Check Hash , --dev folder)
+global.convertSize = function(size) {
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let unitIndex = 0;
+    while(size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex++;
+    }
+    return `${size.toFixed(2)} ${units[unitIndex]}`;
+}
+
+global.getHashFromUrl = async function (url) {
+    const hash = crypto.createHash('sha256');
+
+    return new Promise((resolve, reject) => {
+    request.get(url)
+        .on('error', err => reject(err))
+        .on('data', chunk => hash.update(chunk))
+        .on('end', () => resolve(hash.digest('hex')));
+    });
+}
+
+global.getHashFromFile = function (filepath) {
+    return new Promise((resolve, reject) => {
+        // console.log(`Check exists file hash correct?`);
+        const hash = crypto.createHash('sha256');
+        const stream = fs.createReadStream(filepath);
+
+        stream.on('data', chunk => {
+            hash.update(chunk);
+        });
+
+        stream.on('error', err => {
+            reject(err);
+        });
+
+        stream.on('end', () => {
+            // console.log(`Check File Hash Done!`);
+            resolve(hash.digest('hex'));
+        });
+    });
+}
+
 global.downloadData = function(url, folderpath) {
     return new Promise(async (resolve, reject) => {
         let name = path.basename(url);
         const filepath = path.join(folderpath, name);
-        console.log(`Download File: ${name} | url: ${url}`)
+        // console.log(`Download File: ${name} | url: ${url}`)
         try {
             await fs.promises.mkdir(folderpath, { recursive: true });
             // console.log(`${i.__('Created directory')}: ${folderpath}`);
 
             if (fs.existsSync(filepath)) {
-                console.log(color('yellow'),`File already exists: ${filepath}`);
+                // console.log(color('yellow'),`File already exists: ${filepath}`);
                 // if file exists, check if hash matches
                 const urlHash = await getHashFromUrl(url);
                 const fileHash = await getHashFromFile(filepath);
@@ -249,7 +291,7 @@ global.downloadData = function(url, folderpath) {
 
             req.on('response',function(data){
                 downloadinfo.targetSize = parseInt(data.headers['content-length']);               
-                let bar = new ProgressBar(`:percent |:bar| ${convertSize(downloadinfo.targetSize)} :etas`, {
+                let bar = new ProgressBar(`${name} :percent |:bar| ${convertSize(downloadinfo.targetSize)} :etas`, {
                     complete: '=',
                     incomplete: '-',
                     width: 10,
@@ -262,55 +304,13 @@ global.downloadData = function(url, folderpath) {
             });
         
             stream.on('finish',function(){
-                console.log(color('green'),`${i.__('complete!')} ${filepath}`);
+                console.log(color('green'),`${name} ${i.__('complete!')} ${filepath}`);
                 resolve('ok');
             });
         
             stream.on('error',function(err){
                 reject(`stream error: ${err} in url ${url} at file ${filepath}`);
             });
-        
-            function convertSize(size) {
-                const units = ['B', 'KB', 'MB', 'GB'];
-                let unitIndex = 0;
-                while(size >= 1024 && unitIndex < units.length - 1) {
-                    size /= 1024;
-                    unitIndex++;
-                }
-                return `${size.toFixed(2)} ${units[unitIndex]}`;
-            }
-
-            async function getHashFromUrl(url) {
-                const hash = crypto.createHash('sha256');
-
-                return new Promise((resolve, reject) => {
-                request.get(url)
-                    .on('error', err => reject(err))
-                    .on('data', chunk => hash.update(chunk))
-                    .on('end', () => resolve(hash.digest('hex')));
-                });
-            }
-
-            function getHashFromFile(filepath) {
-                return new Promise((resolve, reject) => {
-                    console.log(`Check exists file hash correct?`);
-                    const hash = crypto.createHash('sha256');
-                    const stream = fs.createReadStream(filepath);
-            
-                    stream.on('data', chunk => {
-                        hash.update(chunk);
-                    });
-            
-                    stream.on('error', err => {
-                        reject(err);
-                    });
-            
-                    stream.on('end', () => {
-                        console.log(`Check File Hash Done!`);
-                        resolve(hash.digest('hex'));
-                    });
-                });
-            }
 
         } catch (err) {
             console.error(err);
@@ -445,8 +445,8 @@ global.getModelDetails = function(url){
             finished_download_date: "EX: 2023/05/26 00:27:30",
             check_hash: false,
         };
-        console.log(`模型資料:`)
-        console.log(obj)
+        // console.log(`模型資料:`)
+        // console.log(obj)
         let model_download_result = await getModelDownload(obj);
         resolve(model_download_result);
     });
@@ -490,8 +490,8 @@ global.getPreviewURL = function(name, format, url){
 global.getModelDownload = function(data){
 	return new Promise(async (resolve, reject)=>{
         // 尚未寫上分類至哪一個資料夾內存放
-        let model = await downloadModel(data.current_download_url, data.current_download_name, data.current_download_hash, __dirname);
-        let model_preview = await downloadModelPreview(data.current_preview_url, __dirname);
+        let model = await downloadModel(data.current_download_url, data.current_download_name, data.current_download_hash, process.cwd());
+        let model_preview = await downloadModelPreview(data.current_preview_url, process.cwd());
         resolve(`Not Finish dev yet`);
 	});
 }
@@ -499,13 +499,13 @@ global.getModelDownload = function(data){
 global.downloadModel = function(url, name, hash, folderpath) {
     return new Promise(async (resolve, reject) => {
         const filepath = path.join(folderpath, name);
-        console.log(`Download Model: ${name} | url: ${url}`)
+        // console.log(`Download Model: ${name} | url: ${url}`)
         try {
             await fs.promises.mkdir(folderpath, { recursive: true });
             // console.log(`${i.__('Created directory')}: ${folderpath}`);
 
             if (fs.existsSync(filepath)) {
-                console.log(color('yellow'),`File already exists: ${filepath}`);
+                // console.log(color('yellow'),`File already exists: ${filepath}`);
                 // if file exists, check if hash matches
                 const fileHash = await getHashFromFile(filepath);
                 // console.log(color('blue'),`api hash: ${hash}`);
@@ -525,7 +525,7 @@ global.downloadModel = function(url, name, hash, folderpath) {
 
             req.on('response',function(data){
                 downloadinfo.targetSize = parseInt(data.headers['content-length']);               
-                let bar = new ProgressBar(`:percent |:bar| ${convertSize(downloadinfo.targetSize)} :etas`, {
+                let bar = new ProgressBar(`${name} :percent |:bar| ${convertSize(downloadinfo.targetSize)} :etas`, {
                     complete: '=',
                     incomplete: '-',
                     width: 10,
@@ -538,45 +538,13 @@ global.downloadModel = function(url, name, hash, folderpath) {
             });
 
             stream.on('finish',function(){
-                console.log(color('green'),`${i.__('complete!')} ${filepath}`);
+                console.log(color('green'),`${name} ${i.__('complete!')} ${filepath}`);
                 resolve('ok');
             });
 
             stream.on('error',function(err){
                 reject(`stream error: ${err} in url ${url} at file ${filepath}`);
-            });
-
-            function convertSize(size) {
-                const units = ['B', 'KB', 'MB', 'GB'];
-                let unitIndex = 0;
-                while(size >= 1024 && unitIndex < units.length - 1) {
-                    size /= 1024;
-                    unitIndex++;
-                }
-                return `${size.toFixed(2)} ${units[unitIndex]}`;
-            }
-
-            function getHashFromFile(filepath) {
-                return new Promise((resolve, reject) => {
-                    console.log(`Check exists file hash correct?`);
-                    const hash = crypto.createHash('sha256');
-                    const stream = fs.createReadStream(filepath);
-            
-                    stream.on('data', chunk => {
-                        hash.update(chunk);
-                    });
-            
-                    stream.on('error', err => {
-                        reject(err);
-                    });
-            
-                    stream.on('end', () => {
-                        console.log(`Check File Hash Done!`);
-                        resolve(hash.digest('hex'));
-                    });
-                });
-            }
-            
+            }); 
 
         } catch (err) {
             console.error(err);
@@ -589,12 +557,12 @@ global.downloadModelPreview = function(url, folderpath) {
     return new Promise(async (resolve, reject) => {
         let name = path.basename(url);
         const filepath = path.join(folderpath, name);
-        console.log(`Download Model: ${name} | url: ${url}`);
+        // console.log(`Download Model: ${name} | url: ${url}`);
         try {
             await fs.promises.mkdir(folderpath, { recursive: true });
             
             if (fs.existsSync(filepath)) {
-                console.log(color('yellow'), `File already exists: ${filepath}`);
+                // console.log(color('yellow'), `File already exists: ${filepath}`);
                 const urlHash = await getHashFromUrl(url);
                 const fileHash = await getHashFromFile(filepath);
 
@@ -610,74 +578,31 @@ global.downloadModelPreview = function(url, folderpath) {
             const req = request(url);
             const stream = req.pipe(fs.createWriteStream(filepath));
             
-            let isresponse = false;
+            // let isresponse = false;
             req.on('response', function(response) {
-                
-                if(!isresponse){
-                    console.log(`${i.__('Prepare to download')} `);
-                }
-                isresponse = true;
+                // if(!isresponse){
+                //     console.log(`${i.__('Prepare to download')} `);
+                // }
+                // isresponse = true;
             });
 
             let isdata = false;
             req.on('data', function(chunk) {
                 if(!isdata){
-                    console.log(`${i.__('downloading')} `);
+                    console.log(`${i.__('downloading')} Preview Image: ${name}`);
                 }
                 isdata = true;
             });
 
 
             stream.on('finish', function() {
-                console.log(color('green'), `${i.__('complete!')} ${filepath}`);
+                console.log(color('green'), `${name} ${i.__('complete!')} ${filepath}`);
                 resolve('ok');
             });
         
             stream.on('error', function(err) {
                 reject(`stream error: ${err} in url ${url} at file ${filepath}`);
             });
-        
-            function convertSize(size) {
-                const units = ['B', 'KB', 'MB', 'GB'];
-                let unitIndex = 0;
-                while (size >= 1024 && unitIndex < units.length - 1) {
-                    size /= 1024;
-                    unitIndex++;
-                }
-                return `${size.toFixed(2)} ${units[unitIndex]}`;
-            }
-        
-            async function getHashFromUrl(url) {
-                const hash = crypto.createHash('sha256');
-            
-                return new Promise((resolve, reject) => {
-                    request.get(url)
-                        .on('error', err => reject(err))
-                        .on('data', chunk => hash.update(chunk))
-                        .on('end', () => resolve(hash.digest('hex')));
-                });
-            }
-        
-            function getHashFromFile(filepath) {
-                return new Promise((resolve, reject) => {
-                    console.log(`Check exists file hash correct?`);
-                    const hash = crypto.createHash('sha256');
-                    const stream = fs.createReadStream(filepath);
-
-                    stream.on('data', chunk => {
-                        hash.update(chunk);
-                    });
-
-                    stream.on('error', err => {
-                        reject(err);
-                    });
-
-                    stream.on('end', () => {
-                        console.log(`Check File Hash Done!`);
-                        resolve(hash.digest('hex'));
-                    });
-                });
-            }
         } catch (err) {
             console.error(err);
             reject();
