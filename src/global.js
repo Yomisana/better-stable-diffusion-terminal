@@ -414,7 +414,7 @@ global.VCRedistInstalled = function(version) {
 //              "check_hash": true,
 //          }
 //      }
-global.getModelDetails = function(url){
+global.getModelDetails = function(url, preview_url){
 // https://civitai.com/
 // GET /api/v1/model-versions/:modelVersionId
 // https://civitai.com//api/v1/model-versions/:modelVersionId
@@ -429,7 +429,8 @@ global.getModelDetails = function(url){
         }
         const data = await getRequestJSON("https://civitai.com//api/v1/model-versions/" + id);
         // console.log(JSON.stringify(data));
-        const current_preview_url = await getPreviewURL(data.files[0].name, data.files[0].metadata.format.toLowerCase(), data.images[0].url);
+        // const current_preview_url = await getPreviewURL(data.files[0].name, data.files[0].metadata.format.toLowerCase(), data.images[0].url);
+        const current_preview_url = await getPreviewURLv2(data.files[0].name, data.files[0].metadata.format.toLowerCase(), preview_url);
         var obj = {
             type: data.model.type,
             name: data.model.name,
@@ -482,6 +483,28 @@ global.getPreviewURL = function(name, format, url){
         // console.log('刪除附檔名後的下載模型檔名:', model_name)
         // console.log('正規化後的 URL:', normalizedUrl);
         // console.log('添加解析度後的 URL:', sizeUrl);
+        // console.log('添加名稱後的 URL:', model_nameUrl);
+        resolve(`${model_nameUrl}`);
+	});
+}
+
+global.getPreviewURLv2 = function(name, format, url){
+	return new Promise((resolve, reject)=>{
+        console.log(name)
+        console.log(url)
+        let format_name = ""
+        if(format === "safetensor"){
+            format_name = "safetensors"
+        }
+        let model_name = name.replace(`.${format_name}`, '');
+        // let normalizedUrl = url.match(/^(https?:\/\/[^/]+\/[^/]+\/[^/]+\/)/)[0];
+        // let sizeUrl = normalizedUrl.concat(`width=400,height=600/`);
+        let model_nameUrl = url.replace(`preview.png`, `${model_name}.preview.png`);
+        // let model_nameUrl = normalizedUrl.concat(`${model_name}.preview.png`);
+        // console.log('刪除附檔名後的下載模型檔名:', model_name)
+        // console.log('正規化後的 URL:', normalizedUrl);
+        // console.log('添加解析度後的 URL:', sizeUrl);
+        // console.log('添加名稱後的 URL:', model_nameUrl);
         // console.log('添加名稱後的 URL:', model_nameUrl);
         resolve(`${model_nameUrl}`);
 	});

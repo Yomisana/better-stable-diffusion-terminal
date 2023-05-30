@@ -28,11 +28,13 @@ console.log(`[express] Starting... ${port} port online`)
 // });
 app.get('/', (req, res) => {
     const url = req.query.url;
-    // console.log(`\nScript of received URL: ${url}`);
+    const preview_url = req.query.preview_url;
+    // console.log(`\nScript of received Model URL: ${url}`);
+    // console.log(`Script of received Preview Image URL: ${preview_url}`);
+
     let success = true; // 假設成功接收到資料
     res.json({ success }); // 回傳標誌給前端
-    // res.send('Received the URL successfully');
-    getModelDetails(url);
+    getModelDetails(url, preview_url);
 });
 
 // 啟動服務器
