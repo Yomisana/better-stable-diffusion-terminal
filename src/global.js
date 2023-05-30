@@ -490,8 +490,8 @@ global.getPreviewURL = function(name, format, url){
 
 global.getPreviewURLv2 = function(name, format, url){
 	return new Promise((resolve, reject)=>{
-        console.log(name)
-        console.log(url)
+        // console.log(name)
+        // console.log(url)
         let format_name = ""
         if(format === "safetensor"){
             format_name = "safetensors"
