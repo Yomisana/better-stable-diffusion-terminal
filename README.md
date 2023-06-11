@@ -1,4 +1,4 @@
-<h1 align="center">Better Stable Diffusion</h1>
+<h1 align="center">Better Stable Diffusion Terminal</h1>
 <p>
   <img alt="Release" src="https://img.shields.io/github/v/release/Yomisana/Better-Stable-Diffusion.png?" />
   <img alt="Release_Downloads" src="https://img.shields.io/github/downloads/Yomisana/Better-Stable-Diffusion/total.png?" />
